@@ -159,8 +159,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError= null;
       break;
     case ADD_COMMENT_SUCCESS:
-      const post = draft.mainPosts.find((v)=>v.id === action.data.postId);//data안에 postId, userId, content
-      post.Comments.unshift(dummyComment(action.data.content));dddddd///커멘트 올릴때 데이터 형식이 어떻게 되는데?
+      const post = draft.mainPosts.find((v)=>v.id === action.data.PostId);//data안에 postId, userId, content
+      post.Comments.unshift(action.data.content);///커멘트 올릴때 데이터 형식이 어떻게 되는데?
       draft.addCommentLoading=false;
       draft.addCommentDone=true;
       break;

@@ -27,7 +27,7 @@ const PostForm = () => {
       type: ADD_POST_REQUEST,
       data: text
     });
-  }, []);
+  }, [text]); //[text] 안써서 text가 undefined
 
   //컴포넌트가 리렌더링 될때마다 함수들이 새로 생성되는 것을 방지
   //e.target - 특정 이벤트가 발생하는 태그

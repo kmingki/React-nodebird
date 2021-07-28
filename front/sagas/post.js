@@ -1,7 +1,7 @@
 //put() redux store에 dispatch하는 역할
 import axios from 'axios';
 import shortId from 'shortid';
-import { all, delay, fork, put, takeLatest, throttle } from 'redux-saga/effects';
+import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 
 import {
     ADD_COMMENT_FAILURE,
@@ -41,12 +41,16 @@ function * loadPosts(action) {
 }
 
 function addPostAPI(data) { // data == text 
+    
     return axios.post('/post', { content : data });
 }
 
 function * addPost(action){ //action
     try {
+        console.log(action.data);
+
         const result = yield call(addPostAPI, action.data); //action.data == text
+        
         yield put({ 
             type : ADD_POST_SUCCESS,
             data: result.data,
@@ -93,16 +97,15 @@ function * removePost(action) {
 
 
 function addCommentAPI(data){
-    return axios.post(`/api/post/${data.postId}/comment`, data);
+    return axios.post(`/post/${data.postId}/comment`, data);
 }
 
-function * addComment(action) { //action은 뭘까
+function * addComment(action) {
     try{
-        //const result = yield call(addCommentAPI, action.data);
-        yield delay(1000);
+        const result = yield call(addCommentAPI, action.data);
         yield put({
             type: ADD_COMMENT_SUCCESS,
-            data: action.data,
+            data: result.data,
         });
     } catch (err) {
         yield put({
