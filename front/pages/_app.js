@@ -6,7 +6,6 @@ import 'antd/dist/antd.css';
 
 import wrapper from '../store/configureStore.js';
 
-//npm run dev
 //pages의 공통부분
 const NodeBird = ({ Component }) => {
     return (

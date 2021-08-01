@@ -20,7 +20,11 @@ router.post('/', async (req, res, next)=>{
             },{
                 model: Image
             },{
-                model: Comment
+                model: Comment,
+                include : [{
+                    model: User,
+                    attributes: ['id', 'nickname']
+                }]
             },{
                 model: Hashtag
             },{

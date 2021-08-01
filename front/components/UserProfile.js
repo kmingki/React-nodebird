@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Card, Avatar, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,7 +12,7 @@ const UserProfile = () => {
         dispatch({
             type: LOG_OUT_REQUEST,
         });
-    },[]);
+    },[LOG_OUT_REQUEST]);
 
     return (
         <Card actions={[

@@ -38,7 +38,7 @@ FollowButton.propTypes = {
         nickname: PropTypes.string.isRequired,
       }).isRequired,
       Images:PropTypes.string,
-      Comments:PropTypes.string
+      Comments:PropTypes.arrayOf(PropTypes.object)
     }).isRequired,
   };
 

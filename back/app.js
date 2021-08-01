@@ -4,6 +4,7 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 var session = require('express-session')
 
+const postsRouter=require('./routes/posts');
 const userRouter=require('./routes/user');
 const postRouter=require('./routes/post');
 const db=require('./models');
@@ -44,6 +45,7 @@ app.get('/', (req, res)=>{
     res.send('hello express');
 });
 
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 

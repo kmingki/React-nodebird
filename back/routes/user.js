@@ -6,6 +6,40 @@ const { User, Post } = require('../models');
 
 const router = express.Router();
 
+router.get('/', async (req, res, next)=>{
+
+    try {
+        if (req.user) {
+            const fullUserWithoutPassword = await User.findOne({
+                where: { id: req.user.id },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: Post,
+                    attributes: ['id'],
+                }, {
+                    model: User,
+                    as: 'Followers',
+                    attributes: ['id']
+                },{
+                    model: User,
+                    as: 'Followings',
+                    attributes: ['id']
+                }
+            ]
+            });
+            return res.status(200).send(fullUserWithoutPassword);
+        } else {
+            return res.status(200).send(null);
+        }
+
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+});
+
 router.post('/', async (req, res, next) => {
     try {
         const exUser = await User.findOne({

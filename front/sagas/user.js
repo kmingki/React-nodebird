@@ -2,6 +2,9 @@ import { all, delay, fork, takeLatest, put, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
+    LOAD_MY_INFO_REQUEST,
+    LOAD_MY_INFO_SUCCESS,
+    LOAD_MY_INFO_FAILURE,
     FOLLOW_FAILURE,
     FOLLOW_REQUEST,
     FOLLOW_SUCCESS,
@@ -19,6 +22,28 @@ import {
     UNFOLLOW_SUCCESS,
   } from '../reducers/user';
 
+function loadMyInfoAPI() {
+    return axios.get('/user');
+}
+
+function * loadMyInfo (action) {
+    try {
+        const result = yield call(loadMyInfoAPI);
+        yield put({
+            type: LOAD_MY_INFO_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type:LOAD_MY_INFO_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
+
 function logInAPI(data){
     return axios.post('/user/login', data);
 }
@@ -27,19 +52,21 @@ function logInAPI(data){
 function * logIn (action) {
     try{
         const result = yield call(logInAPI, action.data);//{ email, password }
-        console.log(result.data);
+        //console.log(result.data);
         yield put({
             type: LOG_IN_SUCCESS,
             data: result.data,
         });
-    }catch(err){
-        console.error(err);
+    } catch (err){
         yield put({
             type: LOG_IN_FAILURE,
-            error: err.response.data, //err.response
+            error: err.response.data, 
         });
     }
 }
+
+/*err.response.data :  https://xn--xy1bk56a.run/axios/guide/error-handling.html */
+
 
 function logOutAPI() {
     return axios.post('/user/logout');
@@ -122,6 +149,10 @@ function * unfollow(action) {
     }
 }
 
+function * watchLoadMyInfo() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function * watchFollow() {
     yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -144,6 +175,7 @@ function * watchSignUp() {
 
 export default function * userSaga(){
     yield all([
+        fork(watchLoadMyInfo),
         fork(watchFollow),
         fork(watchUnfollow),
         fork(watchLogIn),

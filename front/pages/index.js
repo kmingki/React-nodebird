@@ -5,6 +5,7 @@ import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import AppLayout from '../components/AppLayout.js';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const Home = () => {
 
@@ -12,13 +13,16 @@ const Home = () => {
     const { me } = useSelector((state)=>state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state)=>state.post);
 
-    //컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
+    //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
     //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
     useEffect(()=>{
         dispatch({
             type: LOAD_POSTS_REQUEST,
         });
-    }, [LOAD_POSTS_REQUEST]);
+        dispatch({
+            type: LOAD_MY_INFO_REQUEST,
+        })
+    }, [LOAD_POSTS_REQUEST, LOAD_MY_INFO_REQUEST]);
 
     useEffect(()=>{
         function onScroll(){
@@ -38,7 +42,7 @@ const Home = () => {
         };
     }, [mainPosts, hasMorePosts, loadPostsLoading]);
 
-    return (//AppLayout 사이에 있는것이 children으로 전달됨
+    return (
         <AppLayout>
             { me && <PostForm />}
             {mainPosts.map((c) => {

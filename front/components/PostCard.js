@@ -1,5 +1,5 @@
 import React, { useState, useCallback }from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, List, Comment, Avatar } from 'antd';
 import { HeartTwoTone, MessageOutlined, EllipsisOutlined, HeartOutlined, RetweetOutlined } from '@ant-design/icons';
@@ -82,10 +82,11 @@ const PostCard = ({ post }) => {
                 header={`${post.Comments ? post.Comments.length : 0} 댓글`}
                 itemLayout="horizontal"
                 dataSource={post.Comments || []}
-                renderItem={(item) => (
+                renderItem={(item) => { //item은 post.Comments
+                    return(
                     <li>
                         <Comment 
-                        author={item.User.nickname}
+                        author={item.User.nickname}//item.User.nickname
                         avatar={(
                             <Link href={{ pathname: '/user', query: { id: item.User.id }}} as={`/user/${item.User.id}`}>                          
                         <a><Avatar>{item.User.nickname[0]}</Avatar></a>
@@ -94,7 +95,9 @@ const PostCard = ({ post }) => {
                         content={item.content}
                         />
                     </li>
-                )}
+                    );
+                }
+            }
                 />                 
                 </>
             )}
@@ -102,14 +105,14 @@ const PostCard = ({ post }) => {
     );
 };
 
-PostCard.propTypes = {
-    post: propTypes.shape({ //shape을 이용하면 더 정확하게 prop정의 할수있다.
-        id:propTypes.number,
-        User:propTypes.object,
-        content:propTypes.string,
-        createdAt:propTypes.object,
-        Comments:propTypes.arrayOf(propTypes.any),
-        Images: propTypes.arrayOf(propTypes.any)
+PostCard.PropTypes = {
+    post: PropTypes.shape({ //shape을 이용하면 더 정확하게 prop정의 할수있다.
+        id:PropTypes.number,
+        User:PropTypes.object,
+        content:PropTypes.string,
+        createdAt:PropTypes.object,
+        Comments:PropTypes.arrayOf(PropTypes.object),
+        Images: PropTypes.arrayOf(PropTypes.any)
     }),
 };
 

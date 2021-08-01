@@ -1,6 +1,5 @@
-import shortId from 'shortid';
-import faker from 'faker';
-
+//import shortId from 'shortid';
+//import faker from 'faker';
 import produce from "immer";
 
 export const initialState = {
@@ -21,10 +20,9 @@ export const initialState = {
   addCommentError: null,
 };
 
-//load post에 쓰이는것
-//map: 배열내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열 반환
-//number개의 원소의 array를 fill()로 초기화 각각의 요소에 map 함수 실행
-//return : 배열 리턴
+/*map(): 배열내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열 반환
+number개의 원소의 array를 fill()로 초기화한 다음 각각의 요소에 map 함수 실행
+return : 배열 리턴
 export const generateDummyPost = (number) => Array(number).fill().map(()=>({
   id : shortId.generate(),
   User: {
@@ -43,10 +41,9 @@ export const generateDummyPost = (number) => Array(number).fill().map(()=>({
     content: faker.lorem.sentence(),
   }]
 }));
-
+*/
 
 //action
-//action의 type은 일반적으로 문자열 상수
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
@@ -69,8 +66,6 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 
 //action creator : 파라미터를 받아와서 액션객체 형태로 만들어준다.
-//안쓰는거같은데?? 다른 파일에서 불러와서 사용
-//나중에 없애고 실행해볼까 ???/
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
   data,
@@ -80,28 +75,6 @@ export const addPost = (data) => ({
 export const addComment = (data) => ({
   type: ADD_COMMENT_REQUEST,
   data,
-});
-
-/*
-const dummyPost = (data) => ({
-  id: data.id, //post의 id
-  content: data.content,
-  User : { //작성자의 id
-    id:1,
-    nickname: '미니',
-  },
-  Images:[],
-  Comments:[],
-});
-*/
-
-const dummyComment = (data) => ({
-  id:shortId.generate(),
-  content:data,
-  User:{
-    id:1,
-    nickname:'미니'
-  }
 });
 
 //Reducers : action을 통해 어떤 행동을 정의했다면, 그 결과 상태가 어떻게 바뀌는지 특정하게 되는 함수
@@ -123,7 +96,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LOAD_POSTS_FAILURE: 
       draft.loadPostsLoading = false;
-      draft.loadPostsError = action.error; //action.error?
+      draft.loadPostsDone = false;
+      draft.loadPostsError = action.error;
       break;
     case ADD_POST_REQUEST:
       draft.addPostLoading = true;
@@ -159,8 +133,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError= null;
       break;
     case ADD_COMMENT_SUCCESS:
-      const post = draft.mainPosts.find((v)=>v.id === action.data.PostId);//data안에 postId, userId, content
-      post.Comments.unshift(action.data.content);///커멘트 올릴때 데이터 형식이 어떻게 되는데?
+      const post = draft.mainPosts.find((v)=>v.id === action.data.PostId);
+      post.Comments.unshift(action.data.content);
       draft.addCommentLoading=false;
       draft.addCommentDone=true;
       break;
