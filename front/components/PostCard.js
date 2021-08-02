@@ -105,12 +105,12 @@ const PostCard = ({ post }) => {
     );
 };
 
-PostCard.PropTypes = {
+PostCard.propTypes = {
     post: PropTypes.shape({ //shape을 이용하면 더 정확하게 prop정의 할수있다.
         id:PropTypes.number,
         User:PropTypes.object,
         content:PropTypes.string,
-        createdAt:PropTypes.object,
+        createdAt:PropTypes.string,
         Comments:PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.any)
     }),

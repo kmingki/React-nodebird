@@ -31,13 +31,13 @@ const FollowButton = ({ post }) => {
 
 FollowButton.propTypes = {
     post: PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
       content:PropTypes.string,
       User: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
         nickname: PropTypes.string.isRequired,
       }).isRequired,
-      Images:PropTypes.string,
+      Images:PropTypes.array,
       Comments:PropTypes.arrayOf(PropTypes.object)
     }).isRequired,
   };

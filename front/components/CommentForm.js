@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from '../hooks/useInput';
-import { ADD_COMMENT_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST  } from '../reducers/post';
 
 const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
-  const { addCommentDone, addCommentLoading } = useSelector((state)=>state.post);
+  const { addCommentDone, addCommentLoading, addCommentError } = useSelector((state)=>state.post);
   const id = useSelector((state)=>state.user.me?.id);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
@@ -17,6 +17,12 @@ const CommentForm = ({ post }) => {
       setCommentText('');
     }
   }, [addCommentDone]);
+
+  useEffect(()=>{
+    if(addCommentError) {
+      alert(addCommentError);
+    }
+  }, [addCommentError]);
 
   const onSubmitComment = useCallback(() => {
     dispatch({
@@ -41,10 +47,10 @@ const CommentForm = ({ post }) => {
 
 CommentForm.propTypes = {
   post: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     content:PropTypes.string,
     User: PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
       nickname: PropTypes.string.isRequired,
     }).isRequired,
     Images:PropTypes.string,

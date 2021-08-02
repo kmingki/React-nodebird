@@ -68,7 +68,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next)=>{
                 attributes:  [ 'id', 'nickname' ] //조인한 테이블의 attribute
             }]
         });
-
+        console.log(fullComment);
         return res.status(201).send(fullComment);
     }catch(error){
         console.error(error);

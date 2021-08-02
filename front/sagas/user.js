@@ -38,7 +38,7 @@ function * loadMyInfo (action) {
         console.error(err);
         yield put({
             type:LOAD_MY_INFO_FAILURE,
-            data: err.response.data,
+            error: err.response.data,
         });
     }
 }
@@ -103,7 +103,7 @@ function* signUp(action) {
       console.error(err);
       yield put({
         type: SIGN_UP_FAILURE,
-        error: err.response.data,//err.response가 undefined라는데 
+        error: err.response.data,
       });
     }
   }
