@@ -1,4 +1,4 @@
-import React, { useState, useCallback }from 'react';
+import React, { useState, useCallback, useEffect }from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, List, Comment, Avatar } from 'antd';
@@ -10,23 +10,37 @@ import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import CommentForm from './CommentForm';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 
 const CardWrapper = styled.div`
     margin-bottom: 20px;
 `;
-
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-    const { removePostLoading } = useSelector((state)=>state.post);
+    const { removePostLoading, likePostError } = useSelector((state)=>state.post);
     const [ commentFormOpened, setCommentFormOpened ] = useState(false);
-    const [ liked , setLiked ] = useState(false);
     const { me } = useSelector((state) => state.user);
-    const id = me && me.id; //있으면 id 없으면 undefined
-    
-    const onToggleLike = useCallback(()=>{
-        setLiked((prev) => !prev);
+    const id = me?.id; //있으면 id 없으면 undefined
+
+    const onUnlike = useCallback(()=>{
+
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id
+        });
     },[]);
+
+    const onLike = useCallback(() => {
+        
+        if (!id) {
+          return alert('로그인이 필요합니다.');
+        }
+        return dispatch({
+          type: LIKE_POST_REQUEST,
+          data: post.id,
+        });
+
+      }, [post, id]);
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
@@ -39,6 +53,8 @@ const PostCard = ({ post }) => {
         });
     }, []);
 
+    const liked = post.Likers.find(v=> v.id === id);
+
     return(
         <CardWrapper key={post.id}>
             <Card
@@ -46,8 +62,8 @@ const PostCard = ({ post }) => {
             actions={[
                 <RetweetOutlined key="retweet" />,
                 liked 
-                ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
-                : <HeartOutlined key="heart" onClick={onToggleLike} />,
+                ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
+                : <HeartOutlined key="heart" onClick={onLike} />,
                 <MessageOutlined key="message" onClick={onToggleComment}/>,
                 <Popover 
                 key="elipsis" 
@@ -112,7 +128,8 @@ PostCard.propTypes = {
         content:PropTypes.string,
         createdAt:PropTypes.string,
         Comments:PropTypes.arrayOf(PropTypes.object),
-        Images: PropTypes.arrayOf(PropTypes.any)
+        Images: PropTypes.arrayOf(PropTypes.any),
+        Likers: PropTypes.arrayOf(PropTypes.object)
     }),
 };
 

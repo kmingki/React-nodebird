@@ -4,6 +4,12 @@ import shortId from 'shortid';
 import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 
 import {
+    LIKE_POST_FAILURE,
+    LIKE_POST_REQUEST,
+    LIKE_POST_SUCCESS,
+    UNLIKE_POST_FAILURE,
+    UNLIKE_POST_REQUEST,
+    UNLIKE_POST_SUCCESS,
     ADD_COMMENT_FAILURE,
     ADD_COMMENT_REQUEST,
     ADD_COMMENT_SUCCESS,
@@ -19,6 +25,35 @@ import {
   } from '../reducers/post';
 
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
+function unlikePostAPI() {
+
+}
+
+function * unlikePost() {
+
+}
+
+function likePostAPI(data) {
+    return axios.patch(`/post/${data}/like`);
+}
+
+function * likePost(action) {
+    try {
+        const result = yield call(likePostAPI, action.data);
+        yield put({
+            type: LIKE_POST_SUCCESS,
+            data: result.data
+        });
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: LIKE_POST_FAILURE,
+            error: error.response.data
+        })
+    }
+    
+}
 
 function loadPostsAPI() {
     return axios.get('/posts');
@@ -111,6 +146,13 @@ function * addComment(action) {
         });
     }
 }
+function * watchLikePost() {
+    yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function * watchUnlikePost() {
+    yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
+}
 
 function * watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
@@ -130,6 +172,8 @@ function * watchAddComment() {
 
 export default function * postSaga() {
     yield all([
+        fork(watchLikePost),
+        fork(watchUnlikePost),
         fork(watchAddPost),
         fork(watchLoadPosts),
         fork(watchRemovePost),
