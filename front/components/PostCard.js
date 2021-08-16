@@ -24,16 +24,19 @@ const PostCard = ({ post }) => {
 
     const onUnlike = useCallback(()=>{
 
+        if (!id) {
+            return alert('로그인이 필요합니다.');
+        }
         dispatch({
             type: UNLIKE_POST_REQUEST,
             data: post.id
         });
-    },[]);
+    }, [post, id]);
 
     const onLike = useCallback(() => {
         
         if (!id) {
-          return alert('로그인이 필요합니다.');
+            return alert('로그인이 필요합니다.');
         }
         return dispatch({
           type: LIKE_POST_REQUEST,

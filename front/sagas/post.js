@@ -26,12 +26,25 @@ import {
 
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
-function unlikePostAPI() {
-
+function unlikePostAPI(data) {
+    return axios.patch(`post/${data}/unlike`);
 }
 
-function * unlikePost() {
-
+function * unlikePost(action) {
+    try{
+        const result = yield call(unlikePostAPI, action.data);
+        //console.log(result.data);
+        yield put({
+            type: UNLIKE_POST_SUCCESS,
+            data: result.data
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: UNLIKE_POST_FAILURE,
+            data: err.response.data
+        });
+    }
 }
 
 function likePostAPI(data) {

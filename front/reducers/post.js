@@ -84,11 +84,14 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unLikePostDone = false;
       draft.unLikePostError = null;
       break;
-    case UNLIKE_POST_SUCCESS:
+    case UNLIKE_POST_SUCCESS: {
+      const post = draft.mainPosts.find((v)=> v.id === action.data.PostId);//find의 callback은 return
+      post.Likers = post.Likers.filter((v)=> v.id !== action.data.UserId);
       draft.unLikePostLoading = false;
       draft.unLikePostDone = true;
       draft.unLikePostError = null;
       break;
+    }
     case UNLIKE_POST_FAILURE:
       draft.unLikePostLoading = false;
       draft.unLikePostDone = false;
@@ -132,7 +135,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_POST_SUCCESS:
       draft.removePostLoading=false;
       draft.removePostDone=true;
-      draft.mainPosts = draft.mainPosts.filter((v)=>{ v.id !== action.data})
+      draft.mainPosts = draft.mainPosts.filter((v)=> v.id !== action.data);
       break;
     case REMOVE_POST_FAILURE:
       draft.removePostLoading=false;
