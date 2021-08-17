@@ -95,7 +95,7 @@ router.patch('/:postId/like', isLoggedIn, async (req, res, next)=>{
 
 });
 
-router.patch('/:postId/unlike', isLoggedIn, async(req,res,next)=>{
+router.patch('/:postId/unlike', isLoggedIn, async (req,res,next)=>{
     
     try{
         const post = await Post.findOne({ where: { id: req.params.postId }});
@@ -113,6 +113,20 @@ router.patch('/:postId/unlike', isLoggedIn, async(req,res,next)=>{
         next(err);
     }
 })
+
+router.delete('/:postId', isLoggedIn, async(req, res, next)=>{ //delete(`/post/${data}`
+    try {
+
+        await Post.destroy({
+            where: { id : req.params.postId, UserId: req.user.id }
+        })
+
+        return res.status(200).send({ postId: parseInt(req.params.postId, 10)});
+    } catch (error) {
+        console.error(error);
+        next(error);
+    } 
+});
 
 module.exports = router;
 

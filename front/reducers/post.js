@@ -68,7 +68,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LIKE_POST_SUCCESS: {
       const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-      post.Likers.push({ id: action.data.UserId }); //배열의 맨뒤에 push
+      post.Likers.push({ id: action.data.UserId }); //push() : 배열의 맨뒤에 push
       draft.likePostLoading = false;
       draft.likePostDone = true;
       draft.likePostError = null;
@@ -85,7 +85,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.unLikePostError = null;
       break;
     case UNLIKE_POST_SUCCESS: {
-      const post = draft.mainPosts.find((v)=> v.id === action.data.PostId);//find의 callback은 return
+      const post = draft.mainPosts.find((v)=> v.id === action.data.PostId);
       post.Likers = post.Likers.filter((v)=> v.id !== action.data.UserId);
       draft.unLikePostLoading = false;
       draft.unLikePostDone = true;
@@ -105,7 +105,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_POSTS_SUCCESS:
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
-      draft.mainPosts = action.data.concat(draft.mainPosts);//action.data에 load한 배열 들어있음, action.data + draft.mainPosts
+      draft.mainPosts = action.data.concat(draft.mainPosts);//action.data = load한 배열, action.data + draft.mainPosts
       draft.hasMorePosts = draft.mainPosts.length < 50;
       break;
     case LOAD_POSTS_FAILURE: 
@@ -135,11 +135,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_POST_SUCCESS:
       draft.removePostLoading=false;
       draft.removePostDone=true;
-      draft.mainPosts = draft.mainPosts.filter((v)=> v.id !== action.data);
+      draft.mainPosts=draft.mainPosts.filter((v)=> v.id !== action.data.postId);
       break;
     case REMOVE_POST_FAILURE:
       draft.removePostLoading=false;
-      draft.removePostError = action.error;
+      draft.removePostDone=false;
+      draft.removePostError=action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;

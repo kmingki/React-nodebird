@@ -60,24 +60,6 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-//왜 ...를 썼는지 이유 찾아보기
-//me에 들어갈 객체
-const dummyUser = (data) => ({
-    ...data,
-    nickname:'라일락',
-    id: 1,
-    Posts: [{ id : 1 }],
-    Followings: [{nickname: '부기초'}, { nickname: 'zerocho' }, {nickname:'strawberry'}],
-    Followers: [{nickname: '부기초'}, { nickname: 'zerocho' }, {nickname:'strawberry'}]    
-});
-
-//data는 state를 담은 객체
-//안써도 되지않나?
-export const logoutRequestAction = (data) => ({
-    type: LOG_OUT_REQUEST,
-});
-
-//action은 action객체
 const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch(action.type){
     case LOAD_MY_INFO_REQUEST:
@@ -170,11 +152,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.changeNicknameError = null;
         draft.changeNicknameDone = false;
         break;
-        case CHANGE_NICKNAME_SUCCESS:
+    case CHANGE_NICKNAME_SUCCESS:
         draft.changeNicknameLoading = false;
+        draft.changeNicknameError = null;
         draft.changeNicknameDone = true;
         break;
-        case CHANGE_NICKNAME_FAILURE:
+    case CHANGE_NICKNAME_FAILURE:
         draft.changeNicknameLoading = false;
         draft.changeNicknameError = action.error;
         break;
@@ -183,7 +166,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         break;
     case REMOVE_POST_OF_ME:
         //filter()메서드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환한다.
-        draft.me.Posts = draft.me.Posts.filter((v)=> v.id !== action.data);
+        draft.me.Posts = draft.me.Posts.filter((v)=> v.id !== action.data.postId);
         break;
     default:
         break;
