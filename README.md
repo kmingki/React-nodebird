@@ -8,3 +8,4 @@
 * Redux(ReactRedux)
 * Redux-Saga
 * Styled-component
+## Back End 스택
