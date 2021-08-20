@@ -127,11 +127,9 @@ router.post('/logout', isLoggedIn, (req, res) => {
 router.patch('/changeNickname', isLoggedIn, async (req, res, next)=>{
 
     try {
-        const user = User.findOne({ where: { id : req.user.id }});
-        user.nickname = req.body.nickname;
-        await user.save();
+        await User.update({nickname : req.body.nickname }, { where: { id : req.user.id }});
 
-        res.status(200).send({nickname: nickname });
+        res.status(200).send({nickname: req.body.nickname });
     } catch (err) {
         console.error(err);
         next(err);

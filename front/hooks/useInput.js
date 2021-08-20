@@ -9,5 +9,8 @@ export default (initValue = null) => {
   const handler = useCallback((e) => {
     setter(e.target.value);
   }, []);
-  return [value, handler, setter];
+  return [value, handler, setter];//setter와 handler 왜 따로 ...
 };
+
+
+
