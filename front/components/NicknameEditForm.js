@@ -2,7 +2,7 @@ import React, { useMemo }from 'react';
 import { Form , Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { CHANGE_NICKNAME_REQUEST } from '../reducers/user'; 
-import { useInput } from '../hooks/useInput';
+import useInput from '../hooks/useInput.js';
 
 const NicknameEditForm = () => {
     const dispatch = useDispatch();

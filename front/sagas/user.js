@@ -5,9 +5,6 @@ import {
     LOAD_MY_INFO_REQUEST,
     LOAD_MY_INFO_SUCCESS,
     LOAD_MY_INFO_FAILURE,
-    FOLLOW_FAILURE,
-    FOLLOW_REQUEST,
-    FOLLOW_SUCCESS,
     LOG_IN_FAILURE,
     LOG_IN_REQUEST,
     LOG_IN_SUCCESS,
@@ -17,9 +14,15 @@ import {
     SIGN_UP_FAILURE,
     SIGN_UP_REQUEST,
     SIGN_UP_SUCCESS,
+    FOLLOW_FAILURE,
+    FOLLOW_REQUEST,
+    FOLLOW_SUCCESS,
     UNFOLLOW_FAILURE,
     UNFOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
+    LOAD_FOLLOWERS_REQUEST,
+    LOAD_FOLLOWERS_FAILURE,
+    LOAD_FOLLOWERS_SUCCESS,
     CHANGE_NICKNAME_REQUEST,
     CHANGE_NICKNAME_SUCCESS,
     CHANGE_NICKNAME_FAILURE,
@@ -111,17 +114,16 @@ function* signUp(action) {
     }
   }
   
-function followAPI() {
-    return axios.post('/api/follow');
+function followAPI(data) {
+    return axios.patch(`/user/follow/${data}`);
 }
 
 function * follow(action) {
     try{
-        //const result = yield call(followAPI);
-        yield delay(1000);
+        const result = yield call(followAPI, action.data);
         yield put({
             type: FOLLOW_SUCCESS,
-            data: action.data,
+            data: result.data,
         });
     } catch (err) {
         console.error(err);
@@ -133,7 +135,7 @@ function * follow(action) {
 }
 
 function unfollowAPI() {
-    return axios.post('/api/unfollow');
+    return axios.patch('/api/unfollow');
 }
 
 function * unfollow(action) {
@@ -148,6 +150,27 @@ function * unfollow(action) {
         yield put({
             type: UNFOLLOW_FAILURE,
             error: err.response.data,
+        });
+    }
+}
+function loadFollowersAPI(){
+    return axios.get('user/loadFollowers');
+}
+function * loadFollowers(action){
+    
+    try {
+        const result = yield loadFollowersAPI();
+
+        yield put({
+            type: LOAD_FOLLOWERS_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_FOLLOWERS_FAILURE,
+            error: err.response.data
         });
     }
 }
@@ -186,6 +209,14 @@ function * watchFollow() {
 
 function * watchUnfollow() {
     yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
+
+function * watchLoadFollowers() {
+    yield takeLatest(UNFOLLOW_REQUEST, loadFollowers);
+}
+
+function * watchLoadFollowings() {
+    yield takeLatest(UNFOLLOW_REQUEST, loadFollowings);
 }
 
 function * watchLogIn() {
