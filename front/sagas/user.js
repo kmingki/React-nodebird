@@ -23,6 +23,9 @@ import {
     LOAD_FOLLOWERS_REQUEST,
     LOAD_FOLLOWERS_FAILURE,
     LOAD_FOLLOWERS_SUCCESS,
+    LOAD_FOLLOWINGS_REQUEST,
+    LOAD_FOLLOWINGS_FAILURE,
+    LOAD_FOLLOWINGS_SUCCESS,
     CHANGE_NICKNAME_REQUEST,
     CHANGE_NICKNAME_SUCCESS,
     CHANGE_NICKNAME_FAILURE,
@@ -134,17 +137,17 @@ function * follow(action) {
     }
 }
 
-function unfollowAPI() {
-    return axios.patch('/api/unfollow');
+function unfollowAPI(data) {
+    return axios.patch(`/user/unfollow/${data}`);
 }
 
 function * unfollow(action) {
     try{
-        yield delay(1000);
+        const result = yield call(unfollowAPI, action.data);
         yield put({
             type: UNFOLLOW_SUCCESS,
-            data : action.data,
-        })
+            data : result.data,
+        });
     } catch (err) {
         console.error(err);
         yield put({
@@ -154,7 +157,7 @@ function * unfollow(action) {
     }
 }
 function loadFollowersAPI(){
-    return axios.get('user/loadFollowers');
+    return axios.get('/user/loadFollowers');
 }
 function * loadFollowers(action){
     
@@ -174,6 +177,29 @@ function * loadFollowers(action){
         });
     }
 }
+
+function loadFollowingsAPI(){
+    return axios.get('/user/loadFollowings');
+}
+
+function * loadFollowings(action){
+
+    try{
+        const result = yield loadFollowingsAPI();
+
+        yield put({
+            type: LOAD_FOLLOWINGS_SUCCESS,
+            data: result.data
+        });
+
+    } catch(err) {
+        console.error(err);
+        yield put({
+            type: LOAD_FOLLOWINGS_FAILURE,
+            error: err.response.data
+        })
+    }
+ }
 
 function changeNicknameAPI(data) {
     return axios.patch('/user/changeNickname', { nickname: data});
@@ -212,11 +238,11 @@ function * watchUnfollow() {
 }
 
 function * watchLoadFollowers() {
-    yield takeLatest(UNFOLLOW_REQUEST, loadFollowers);
+    yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 }
 
 function * watchLoadFollowings() {
-    yield takeLatest(UNFOLLOW_REQUEST, loadFollowings);
+    yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
 }
 
 function * watchLogIn() {
@@ -233,6 +259,8 @@ function * watchSignUp() {
 
 export default function * userSaga(){
     yield all([
+        fork(watchLoadFollowers),
+        fork(watchLoadFollowings),
         fork(watchChangeNickname),
         fork(watchLoadMyInfo),
         fork(watchFollow),

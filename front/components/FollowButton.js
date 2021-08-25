@@ -8,6 +8,8 @@ const FollowButton = ({ post }) => {
     const dispatch = useDispatch();
     const { me, followLoading, unfollowLoading } = useSelector((state)=>state.user);
     const isFollowing = me?.Followings?.find((v) => v.id === post.User.id);
+    
+
     const onClickButton = useCallback(()=>{
         if (isFollowing){ //내가 post 작성자를 following 하고 있으면
             dispatch({
@@ -34,7 +36,7 @@ const FollowButton = ({ post }) => {
         <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>
             {isFollowing ? '언팔로우' : '팔로우'} 
         </Button>
-    );//로그인 안한 상태에서 팔로우하면 로그인페이지로 가도록 하자
+    );
 };
 
 FollowButton.propTypes = {

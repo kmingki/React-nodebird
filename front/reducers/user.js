@@ -26,6 +26,9 @@ export const initialState = {
     loadFollowersLoading: false,
     loadFollowersDone: false,
     loadFollowersError: null,
+    loadFollowingsLoading: false,
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -96,7 +99,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         break;
     case FOLLOW_SUCCESS:
         draft.followLoading = false;
-        draft.me.Followings.push(action.data.id);
+        draft.me.Followings.push({ id : action.data.UserId});
         draft.followDone = true;
         break;
     case FOLLOW_FAILURE:
@@ -110,7 +113,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         break;
     case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
-        draft.me.Followings = draft.me.Followings.filter((v)=> v.id !== action.data );
+        draft.me.Followings = draft.me.Followings.filter((v)=> v.id !== action.data.UserId );
         draft.unfollowDone = true;
         break;
     case UNFOLLOW_FAILURE:
@@ -132,6 +135,22 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.loadFollowersLoading = false;
         draft.loadFollowersDone = false;
         draft.loadFollowersError = action.error;
+        break;
+    case LOAD_FOLLOWINGS_REQUEST:
+        draft.loadFollowingsLoading = true;
+        draft.loadFollowingsDone = false;
+        draft.loadFollowingsError = null;
+        break;
+    case LOAD_FOLLOWINGS_SUCCESS:
+        draft.me.Followings = action.data;
+        draft.loadFollowingsLoading = false;
+        draft.loadFollowingsDone = true;
+        draft.loadFollowingsError = null;
+        break;
+    case LOAD_FOLLOWINGS_FAILURE:
+        draft.loadFollowingsLoading = false;
+        draft.loadFollowingsDone = false;
+        draft.loadFollowingsError = action.error;
         break;
     case LOG_IN_REQUEST:
         draft.logInLoading = true;

@@ -136,4 +136,68 @@ router.patch('/changeNickname', isLoggedIn, async (req, res, next)=>{
     }
 });
 
+router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
+    
+    try {
+        const user = await User.findOne({ where: { id: req.user.id }});
+        const followers = await user.getFollowers();
+
+        return res.status(200).send(followers);
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+router.get('/loadFollowings', isLoggedIn, async (req, res, next) => {
+
+    try {
+        const user = await User.findOne({ where: { id: req.user.id }});
+        const followings = await user.getFollowings();
+
+        return res.status(200).send(followings);
+        
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+
+});
+
+router.patch('/unfollow/:UserId', isLoggedIn, async (req, res, next)=>{
+    
+    try{
+        const user = await User.findOne({ where: { id : req.params.UserId }});
+        
+        if (!user) {
+            res.status(404).send('존재하지 않는 사용자 입니다.');
+        }
+
+        await user.removeFollowers(req.user.id);
+
+        res.status(200).send({ UserId: parseInt(req.params.UserId, 10)});
+
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.patch('/follow/:UserId', isLoggedIn, async (req, res, next) => {
+
+    try {
+        const user = await User.findOne({ where: { id : req.params.UserId }});
+
+        if(!user){
+            res.status(404).send('존재하지 않는 사용자 입니다.');
+        }
+
+        await user.addFollowers(req.user.id);
+        res.status(200).send({ UserId : parseInt(req.params.UserId, 10 )});
+
+    } catch(err){
+        console.error(err);
+        next(err);
+    }
+});
 module.exports = router;
