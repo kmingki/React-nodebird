@@ -2,8 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, List, Button } from 'antd';
 import { StopOutlined } from '@ant-design/icons';
+import { REMOVE_FOLLOWERS_REQUEST } from '../reducers/user';
+import { useDispatch } from 'react-redux';
+const FollowList = ({ header, data }) => {
 
-const FollowList = ({ header, data }) => (
+  const dispatch = useDispatch();
+  const onClickDeleteFollower = (id) =>
+    dispatch({
+      type: REMOVE_FOLLOWERS_REQUEST,
+      data: { id }
+    });
+  
+  return(
     <List
       style={{ marginBottom: '20px' }}
       grid={{ gutter: 4, xs: 2, md: 3 }}
@@ -14,13 +24,14 @@ const FollowList = ({ header, data }) => (
       dataSource={data}
       renderItem={(item) => (
         <List.Item style={{ marginTop: '20px' }}>
-          <Card actions={[<StopOutlined key="stop" />]}>
+          <Card actions={[<StopOutlined key="stop" onClick={() => onClickDeleteFollower(item.id)} />]}>
             <Card.Meta description={item.nickname} />
           </Card>
         </List.Item>
       )}
     />
-  );
+  )
+  };
   
   FollowList.propTypes = {
     header: PropTypes.string.isRequired,

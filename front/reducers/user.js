@@ -29,6 +29,9 @@ export const initialState = {
     loadFollowingsLoading: false,
     loadFollowingsDone: false,
     loadFollowingsError: null,
+    removeFollowersLoading: false,
+    removeFollowersDone: false,
+    removeFollowersError: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -70,6 +73,10 @@ export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
 export const LOAD_FOLLOWINGS_REQUEST = 'LOAD_FOLLOWINGS_REQUEST';
 export const LOAD_FOLLOWINGS_SUCCESS = 'LOAD_FOLLOWINGS_SUCCESS';
 export const LOAD_FOLLOWINGS_FAILURE = 'LOAD_FOLLOWINGS_FAILURE';
+
+export const REMOVE_FOLLOWERS_REQUEST = 'REMOVE_FOLLOWERS_REQUEST';
+export const REMOVE_FOLLOWERS_SUCCESS = 'REMOVE_FOLLOWERS_SUCCESS';
+export const REMOVE_FOLLOWERS_FAILURE = 'REMOVE_FOLLOWERS_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
@@ -152,6 +159,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         draft.loadFollowingsDone = false;
         draft.loadFollowingsError = action.error;
         break;
+    case REMOVE_FOLLOWERS_REQUEST:
+        draft.removeFollowersLoading = true;
+        draft.removeFollowersDone = false;
+        draft.removeFollowersError = null;
+    case REMOVE_FOLLOWERS_SUCCESS:
+        draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+        draft.removeFollowersLoading = false;
+        draft.removeFollowersDone = true;
+        draft.removeFollowersError = null;
+    case REMOVE_FOLLOWERS_FAILURE:
+        draft.removeFollowersLoading = false;
+        draft.removeFollowersDone = false;
+        draft.removeFollowersError = action.error;
     case LOG_IN_REQUEST:
         draft.logInLoading = true;
         draft.logInError = null;

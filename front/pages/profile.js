@@ -14,11 +14,6 @@ const Profile = () => {
 
     useEffect(()=>{
 
-        if (!me){
-            alert('로그인 해주세요');
-            Router.replace('/');
-        }
-
         dispatch({
             type: LOAD_FOLLOWERS_REQUEST,
         });
@@ -27,9 +22,13 @@ const Profile = () => {
             type: LOAD_FOLLOWINGS_REQUEST,
         });
 
-    }, [me]);
+    }, []);
 
-    const followingList = [{ nickname:'제로초'}, {nickname:'바보'},{nickname:'노드버드'}]
+    if (!me) {
+        if(!alert('로그인 해주세요')) {
+            Router.replace('/');
+        }
+    }
 
     return (
         <>
@@ -38,8 +37,8 @@ const Profile = () => {
             </Head>
         <AppLayout>
             <NicknameEditForm />
-            <FollowList header="팔로잉 목록" data={followingList} />
-            <FollowList header="팔로워 목록" data={me.followers} />
+            <FollowList header="팔로잉 목록" data={me.Followings} />
+            <FollowList header="팔로워 목록" data={me.Followers} />
         </AppLayout>
         </>
     );
