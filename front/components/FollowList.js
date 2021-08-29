@@ -2,16 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, List, Button } from 'antd';
 import { StopOutlined } from '@ant-design/icons';
-import { REMOVE_FOLLOWERS_REQUEST } from '../reducers/user';
+import { REMOVE_FOLLOWERS_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user';
 import { useDispatch } from 'react-redux';
 const FollowList = ({ header, data }) => {
 
   const dispatch = useDispatch();
-  const onClickDeleteFollower = (id) =>
-    dispatch({
-      type: REMOVE_FOLLOWERS_REQUEST,
-      data: { id }
+  const onClickDeleteFollower = (id) =>{
+
+    //팔로잉 취소
+    if (header === "팔로잉 목록") {
+      return dispatch({
+        type: UNFOLLOW_REQUEST,
+        data: id,
     });
+    } else {
+      //팔로워 차단
+      return dispatch({
+        type: REMOVE_FOLLOWERS_REQUEST,
+        data: { id }
+      });
+    }
+  };
   
   return(
     <List
