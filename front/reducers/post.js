@@ -56,6 +56,8 @@ export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
 //Reducers : action을 통해 어떤 행동을 정의했다면, 그 결과 상태가 어떻게 바뀌는지 특정하게 되는 함수
 //produce state, 상태의 결과 함수
@@ -161,7 +163,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentLoading=false;
       draft.addCommentError = action.error;
       break;
-    default:
+    case UPLOAD_IMAGES_REQUEST:
+      draft.imagePaths.unshift(action.data);
+      break;
+    default: 
       break; //return draft해도 되지않나...
   }
 });

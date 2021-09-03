@@ -158,6 +158,28 @@ function * addComment(action) {
         });
     }
 }
+
+function uploadImagesAPI(data){
+    return axios.post('/post/images', data);
+}
+
+function * uploadImages(action) {
+    try{
+        const result = yield call(uploadImagesAPI, action.data);
+        yield put({
+            type: UPLOAD_IMAGES_SUCCESS,
+            data: action.data
+        });
+    } catch (err) {
+        yield put({
+            type: UPLOAD_IMAGES_REQUEST,
+            error: err.response.data,
+        });
+    }
+}
+
+
+
 function * watchLikePost() {
     yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
@@ -181,9 +203,13 @@ function * watchRemovePost() {
 function * watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
+function * watchUploadImages() {
+    yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
 
 export default function * postSaga() {
     yield all([
+        fork(watchUploadImages),
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchAddPost),
