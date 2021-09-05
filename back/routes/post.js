@@ -115,7 +115,7 @@ router.patch('/:postId/like', isLoggedIn, async (req, res, next)=>{
             return res.status(403).send('존재하지 않는 게시글 입니다');
         }
         
-        await post.addLikers(req.user.id);//객체를 넣어준다???
+        await post.addLikers(req.user.id);//객체 or id
         return res.json({ PostId: post.id, UserId: req.user.id });
     } catch (error) {
         console.error(error);

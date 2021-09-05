@@ -24,6 +24,9 @@ export const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
 };
 
 //action
@@ -164,7 +167,21 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addCommentError = action.error;
       break;
     case UPLOAD_IMAGES_REQUEST:
+      draft.uploadImagesLoading = true;
+      draft.uploadImagesDone = false;
+      draft.uploadImagesError = false;
+      
+      break;
+    case UPLOAD_IMAGES_SUCCESS:
       draft.imagePaths.unshift(action.data);
+      draft.uploadImagesLoading = false;
+      draft.uploadImagesDone = true;
+      draft.uploadImagesError = false;
+      break;
+    case UPLOAD_IMAGES_FAILURE:
+      draft.uploadImagesLoading = false;
+      draft.uploadImagesDone = false;
+      draft.uploadImagesError = action.error;
       break;
     default: 
       break; //return draft해도 되지않나...
