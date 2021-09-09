@@ -62,12 +62,16 @@ export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 //Reducers : action을 통해 어떤 행동을 정의했다면, 그 결과 상태가 어떻게 바뀌는지 특정하게 되는 함수
 //produce state, 상태의 결과 함수
 //return produce()인 것
 //draft가 state로 바뀌는것
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case REMOVE_IMAGE:
+      draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      break;
     case LIKE_POST_REQUEST:
       draft.likePostLoading = true;
       draft.likePostDone = false;
@@ -128,6 +132,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_SUCCESS:
       draft.addPostLoading = false;
       draft.addPostDone=true;
+      draft.imagePaths = [];
       draft.mainPosts.unshift(action.data);//새로운 요소를 배열의 맨 앞쪽에 추가하고, 새로운 길이반환
       break;
     case ADD_POST_FAILURE:
@@ -172,7 +177,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadImagesError = false;
       break;
     case UPLOAD_IMAGES_SUCCESS:
-      draft.imagePaths.unshift(action.data);
+      draft.imagePaths=action.data;
       draft.uploadImagesLoading = false;
       draft.uploadImagesDone = true;
       draft.uploadImagesError = false;

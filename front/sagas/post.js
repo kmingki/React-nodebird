@@ -92,7 +92,7 @@ function * loadPosts(action) {
 
 function addPostAPI(data) { // data == text 
     
-    return axios.post('/post', { content : data });
+    return axios.post('/post', data);
 }
 
 function * addPost(action){ //action
@@ -163,12 +163,12 @@ function * addComment(action) {
 }
 
 function uploadImagesAPI(data){
-    return axios.post('/post/images', data);
+    return axios.post('/post/images', data); //form data는 그대로 전송해야함
 }
 
 function * uploadImages(action) {
     try{
-        const result = yield call(uploadImagesAPI, action.data);
+        const result = yield call(uploadImagesAPI, action.data); //action.data = 이미지 form data
         yield put({
             type: UPLOAD_IMAGES_SUCCESS,
             data: result.data

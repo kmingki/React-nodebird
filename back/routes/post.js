@@ -29,13 +29,21 @@ try {
 
 
 //req.body.content == text
-router.post('/', async (req, res, next)=>{
+router.post('/', isLoggedIn, upload.none(), async (req, res, next)=>{
     
     try{
         const post = await Post.create({
             content: req.body.content,
-            UserId : req.user.id
+            UserId : req.user.id,
         });
+
+        if (req.body.image){
+            if (Array.isArray(req.body.image)) { //이미지를 여러 개 올리면 image : [제로초.png, 부기초.png]
+                const images = await Promise.all(req.body.image.map((image)=> Image.create({ src : image, PostId: post.id })));
+            } else { //이미지를 하나만 올리면 image: 제로초.png
+                const image = await Image.create({ src: req.body.image, PostId: post.id });
+            }
+        }
 
         const fullPost = await Post.findOne({
             where: { id : post.id },
@@ -43,7 +51,8 @@ router.post('/', async (req, res, next)=>{
                 model: User,
                 attributes:  [ 'id', 'nickname' ] //조인한 테이블의 attribute
             },{
-                model: Image
+                model: Image,
+
             },{
                 model: Comment,
                 include : [{

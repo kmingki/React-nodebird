@@ -19,7 +19,7 @@ const PostImages = ({ images }) => {
     if (images.length === 1 ) {
         return (
             <>
-            <img role="presentation" src={images[0].src} onClick={onZoom} />
+            <img role="presentation" src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} onClick={onZoom} />
             {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
             </>
         );
@@ -28,19 +28,17 @@ const PostImages = ({ images }) => {
         return (
             <>
             <div style={{display : 'inline-block'}} >
-            <img role="presentation" src={images[0].src} width="50%" onClick={onZoom} />
-            <img role="presentation" src={images[1].src} width="50%" onClick={onZoom} />
+            <img role="presentation" src={`http://localhost:3065/${images[0].src}`} width="50%" onClick={onZoom} />
+            <img role="presentation" src={`http://localhost:3065/${images[1].src}`} width="50%" onClick={onZoom} />
             </div>
-            {
-            //어떤이미지만 확대? onclose 되는순간 false 로 변해서 실행안됨
-            showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+            {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
             </>
         );
     }
     return(
         <>
         <div>
-            <img role="presentation" src={images[0].src} width="50%" onClick={onZoom} />
+            <img role="presentation" src={`http://localhost:3065/${images[0].src}`} width="50%" onClick={onZoom} />
             <div
             role="presentation"
             style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle'}}
