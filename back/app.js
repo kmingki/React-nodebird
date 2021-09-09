@@ -3,7 +3,8 @@ const cors = require('cors');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 var session = require('express-session')
-
+const morgan = require('morgan');
+const path = require('path');
 const postsRouter=require('./routes/posts');
 const userRouter=require('./routes/user');
 const postRouter=require('./routes/post');
@@ -18,10 +19,12 @@ db.sequelize.sync()
 .catch(console.error);
 passportConfig();
 
+app.use(morgan('dev'));
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
 }));
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();

@@ -11,8 +11,9 @@ const PostForm = () => {
     
   const imageInput = useRef();
   
-  const onChangeImages = useCallback(()=>{
+  const onChangeImages = useCallback((e)=>{
     //console.log('images', e.target.files); 유사배열
+    //multi-part FormData
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f)=>{
       imageFormData.append('image', f);
@@ -28,8 +29,7 @@ const PostForm = () => {
     //click() - element를 마우스로 클릭한 것으로 한다.
 }, [imageInput.current]);
   
-  useEffect(() => {
-    //post가 완료되어야 text를 set '' 
+  useEffect(() => { 
     if(addPostDone) {
       setText('');
     }
@@ -54,7 +54,7 @@ const PostForm = () => {
         <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmitForm}>
           <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?" />
           <div>
-            <input type="file" multiple hidden ref={imageInput} onChange={onChangeImages} />
+            <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
             <Button onClick={onClickImageUpload}>이미지 업로드</Button>
             <Button type="primary" style={{ float: 'right' }} htmlType="submit">짹짹</Button>
           </div>
@@ -62,7 +62,7 @@ const PostForm = () => {
             {imagePaths.map((v) => {
               return (
                 <div key={v} style={{ display: 'inline-block' }}>
-                  <img src={'http://localhost:3000/' + v} style={{ width: '200px' }} alt={v} />
+                  <img src={`http://localhost:3065/${v}`} style={{ width: '200px' }} alt={v} />
                   <div>
                     <Button>제거</Button>
                   </div>

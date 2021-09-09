@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { Post, Comment, Image, Hashtag, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
@@ -70,8 +72,8 @@ router.post('/', async (req, res, next)=>{
 });
 
 
-
-router.post('/images', isLoggedIn, upload.array('many'), async(req, res, next) => {
+router.post('/images', isLoggedIn, upload.array('image'), async(req, res, next) => {
+    console.log(req.files);
     res.json(req.files.map((v)=> v.filename));
 });
 

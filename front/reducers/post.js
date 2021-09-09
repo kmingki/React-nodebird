@@ -170,7 +170,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadImagesLoading = true;
       draft.uploadImagesDone = false;
       draft.uploadImagesError = false;
-      
       break;
     case UPLOAD_IMAGES_SUCCESS:
       draft.imagePaths.unshift(action.data);

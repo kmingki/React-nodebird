@@ -22,6 +22,9 @@ import {
     REMOVE_POST_FAILURE,
     REMOVE_POST_REQUEST,
     REMOVE_POST_SUCCESS,
+    UPLOAD_IMAGES_REQUEST,
+    UPLOAD_IMAGES_SUCCESS,
+    UPLOAD_IMAGES_FAILURE,
   } from '../reducers/post';
 
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
@@ -168,9 +171,10 @@ function * uploadImages(action) {
         const result = yield call(uploadImagesAPI, action.data);
         yield put({
             type: UPLOAD_IMAGES_SUCCESS,
-            data: action.data
+            data: result.data
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: UPLOAD_IMAGES_REQUEST,
             error: err.response.data,
