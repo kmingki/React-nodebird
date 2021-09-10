@@ -31,12 +31,23 @@ try {
 //req.body.content == text
 router.post('/', isLoggedIn, upload.none(), async (req, res, next)=>{
     
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
+
     try{
         const post = await Post.create({
             content: req.body.content,
             UserId : req.user.id,
         });
 
+        if (hashtags) {
+            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+                where: {
+                    name: tag.slice(1).toLowerCase()
+                }
+            }))); //[[노드, true],[리액트, true]]
+
+            await post.addHashtags(result.map(v => v[0]));
+        }
         if (req.body.image){
             if (Array.isArray(req.body.image)) { //이미지를 여러 개 올리면 image : [제로초.png, 부기초.png]
                 const images = await Promise.all(req.body.image.map((image)=> Image.create({ src : image, PostId: post.id })));
