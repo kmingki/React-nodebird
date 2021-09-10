@@ -11,10 +11,17 @@ const Home = () => {
 
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
-    const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state)=>state.post);
+    const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
+
 
     //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
     //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
+    useEffect(()=>{
+        if (retweetError){
+            return alert(retweetError);
+        }
+    }, [retweetError]);
+
     useEffect(()=>{
         dispatch({
             type: LOAD_POSTS_REQUEST,

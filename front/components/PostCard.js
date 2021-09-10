@@ -10,7 +10,7 @@ import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import CommentForm from './CommentForm';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
 
 const CardWrapper = styled.div`
     margin-bottom: 20px;
@@ -20,14 +20,16 @@ const PostCard = ({ post }) => {
     const { removePostLoading, likePostError } = useSelector((state)=>state.post);
     const [ commentFormOpened, setCommentFormOpened ] = useState(false);
     const { me } = useSelector((state) => state.user);
-    const id = me?.id; //있으면 id 없으면 undefined
+    const id = me?.id; //me 있으면 id 없으면 undefined
+
+    
 
     const onUnlike = useCallback(()=>{
 
         if (!id) {
             return alert('로그인이 필요합니다.');
         }
-        dispatch({
+        return dispatch({
             type: UNLIKE_POST_REQUEST,
             data: post.id
         });
@@ -50,12 +52,25 @@ const PostCard = ({ post }) => {
     },[]);
 
     const onRemovePost = useCallback(()=>{
-        dispatch({
+        if (!id) {
+            return alert('로그인이 필요합니다.');
+        }
+        return dispatch({
             type: REMOVE_POST_REQUEST,
             data: post.id,
         });
-    }, []);
+    }, [post, id]);
 
+    const onRetweet = useCallback(() => {
+        if (!id) {
+            return alert('로그인이 필요합니다.');
+        }
+
+        return dispatch({
+            type: RETWEET_REQUEST,
+            data: post.id,
+        });
+    }, [post, id]);
     const liked = post.Likers.find(v=> v.id === id);
 
     return(
@@ -63,7 +78,7 @@ const PostCard = ({ post }) => {
             <Card
             cover={post.Images[0] && <PostImages images={post.Images}/>}//이미지가 반드시 한개 이상일때 실행된다.
             actions={[
-                <RetweetOutlined key="retweet" />,
+                <RetweetOutlined key="retweet" onClick={onRetweet}/>,
                 liked 
                 ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
                 : <HeartOutlined key="heart" onClick={onLike} />,
@@ -91,7 +106,18 @@ const PostCard = ({ post }) => {
                 <Card.Meta
                 avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                 title={post.User.nickname}
-                description={<PostCardContent postData={post.content} />}
+                description={post.Retweet ? 
+                    <Card
+                    cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
+                    extra={<FollowButton post={post.Retweet} />}
+                    >
+                        <Card.Meta
+                        avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+                        title={post.Retweet.User.nickname}
+                        description={<PostCardContent postData={post.Retweet.content} />}
+                        />
+                    </Card>
+                    : <PostCardContent postData={post.content} />}
                 />
             </Card>
             {commentFormOpened && (

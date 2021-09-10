@@ -27,6 +27,9 @@ export const initialState = {
   uploadImagesLoading: false,
   uploadImagesDone: false,
   uploadImagesError: null,
+  retweetLoading: false,
+  retweetDone : false,
+  retweetError: null,
 };
 
 //action
@@ -61,6 +64,10 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 //Reducers : action을 통해 어떤 행동을 정의했다면, 그 결과 상태가 어떻게 바뀌는지 특정하게 되는 함수
@@ -186,6 +193,22 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.uploadImagesLoading = false;
       draft.uploadImagesDone = false;
       draft.uploadImagesError = action.error;
+      break;
+    case RETWEET_REQUEST:
+      draft.retweetLoading = true;
+      draft.retweetDone = false;
+      draft.retweetError = null;
+      break;
+    case RETWEET_SUCCESS:
+      draft.mainPosts.unshift(action.data);
+      draft.retweetLoading = false;
+      draft.retweetDone = true;
+      draft.retweetError = null;
+      break;
+    case RETWEET_FAILURE:
+      draft.retweetLoading = false;
+      draft.retweetDone = false;
+      draft.retweetError = action.error;
       break;
     default: 
       break; //return draft해도 되지않나...

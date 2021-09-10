@@ -25,7 +25,16 @@ router.get('/', async(req, res, next) => {
                 as: 'Likers',
                 attributes: ['id'],
                 through: {attributes: []},
-            },]
+            },{
+                model: Post,
+                as: 'Retweet',
+                include : [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image
+                }]
+            }]
         });
         
         res.status(200).send(posts);
