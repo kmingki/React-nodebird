@@ -106,7 +106,9 @@ const PostCard = ({ post }) => {
                 <Card.Meta
                 avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                 title={post.User.nickname}
-                description={post.Retweet ? 
+                description={post.Retweet ?
+                    <>
+                    <p>{`${post.User.nickname}님이 리트윗하셨습니다`}</p>
                     <Card
                     cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images}/>}
                     extra={<FollowButton post={post.Retweet} />}
@@ -114,9 +116,10 @@ const PostCard = ({ post }) => {
                         <Card.Meta
                         avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
                         title={post.Retweet.User.nickname}
-                        description={<PostCardContent postData={post.Retweet.content} />}
+                        description={<PostCardContent postData={post.Retweet.content}/>}
                         />
                     </Card>
+                    </>
                     : <PostCardContent postData={post.content} />}
                 />
             </Card>

@@ -97,13 +97,13 @@ function * likePost(action) {
     
 }
 
-function loadPostsAPI() {
-    return axios.get('/posts');
+function loadPostsAPI(data) {
+    return axios.get(`/posts?lastId=${data || 0}`);
 }
 
 function * loadPosts(action) {
     try {
-        const result = yield call(loadPostsAPI);
+        const result = yield call(loadPostsAPI, action.data);
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,

@@ -38,7 +38,7 @@ const Home = () => {
                 if( hasMorePosts && !loadPostsLoading ){
                     dispatch({
                         type: LOAD_POSTS_REQUEST,
-                        data: mainPosts[mainPosts.length - 1].id //마지막 post의 id????
+                        data: mainPosts[mainPosts.length - 1]?.id //마지막 post의 id
                     });
                 }
             }
