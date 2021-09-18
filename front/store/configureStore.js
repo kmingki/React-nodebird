@@ -9,7 +9,7 @@ import rootSaga from '../sagas';
 //단 하나의 객체
 
 const configureStore = (context) => {
-    console.log(context);
+    //console.log(context);
     const sagaMiddleware=createSagaMiddleware();
     const middlewares = [sagaMiddleware];
     const enhancer = process.env.NODE_ENV === 'production'

@@ -7,8 +7,10 @@ import Router from 'next/router';
 
 import AppLayout from '../components/appLayout';
 import useInput from '../hooks/useInput';
-import { SIGN_UP_REQUEST, SIGN_UP_DONE } from '../reducers/user';
-
+import { SIGN_UP_REQUEST, SIGN_UP_DONE, LOAD_MY_INFO_REQUEST} from '../reducers/user';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 const ErrorMessage = styled.div`
 color: red;
 `;
@@ -118,5 +120,20 @@ const Signup = () => {
         </AppLayout>
     );
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
+    const cookie = context.req? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
+    }
+
+    context.store.dispatch({
+        type: LOAD_MY_INFO_REQUEST,
+    });
+    
+    context.store.dispatch(END); //REQUEST가 SUCCESS가 될때까지 기다려준다.
+    await context.store.sagaTask.toPromise();
+});
 
 export default Signup;

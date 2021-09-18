@@ -6,8 +6,7 @@ const { User, Post } = require('../models');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next)=>{
-
+router.get('/', async (req, res, next) => {
     try {
         if (req.user) {
             const fullUserWithoutPassword = await User.findOne({
@@ -29,6 +28,7 @@ router.get('/', async (req, res, next)=>{
                 }
             ]
             });
+            console.log(fullUserWithoutPassword);
             return res.status(200).send(fullUserWithoutPassword);
         } else {
             return res.status(200).send(null);
@@ -37,6 +37,44 @@ router.get('/', async (req, res, next)=>{
     } catch (err) {
         console.log(err);
         next(err);
+    }
+});
+
+router.get('/:id', async (req, res, next) => {
+    try {
+        const fullUserWithoutPassword = await User.findOne({
+            where: { id: req.params.id },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [{
+                model: Post,
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: 'Followers',
+                attributes: ['id']
+            },{
+                model: User,
+                as: 'Followings',
+                attributes: ['id']
+            }
+        ]
+        });
+        
+        if (fullUserWithoutPassword) {
+            const data = fullUserWithoutPassword.toJSON();
+            data.Posts = data.Posts.length;
+            data.Followings = data.Followings.length;
+            data.Followers = data.Followers.length;
+            return res.status(200).json(data);
+        } else {
+            return res.status(404).send('존재하지 않는 사용자입니다.');
+        }
+
+    } catch (error) {
+        console.log(error);
+        next(error);
     }
 });
 
