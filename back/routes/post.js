@@ -179,7 +179,57 @@ router.delete('/:postId', isLoggedIn, async(req, res, next)=>{ //delete(`/post/$
     } 
 });
 
-//axios.post(`/post/${data}/retweet`);
+router.post('/:postId', async (req, res, next) => { //GET /post/1
+    
+    try {
+        const post = await Post.findOne({ 
+            where: { id : req.params.postId },
+        });
+    
+        if (!post) {
+            return res.status(404).send("존재하지 않는 게시글입니다.");
+        }
+
+        const fullPost = await Post.findOne({
+            where: { id : post.id },
+            include : [{
+                model: Post,
+                as: 'Retweet',
+                include : [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image
+                }]
+            },{ 
+                model: User,
+                attributes:  [ 'id', 'nickname' ] 
+            },{
+                model: Image,
+
+            },{
+                model: Comment,
+                include : [{
+                    model: User,
+                    attributes: ['id', 'nickname']
+                }]
+            },{
+                model: Hashtag
+            },{
+                model: User,
+                as: 'Likers',
+                attributes: ['id']
+            }]
+        });
+
+        return res.status(200).json(fullPost);
+
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next)=>{
     
     try{
