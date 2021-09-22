@@ -2,6 +2,7 @@ import { Post } from "../../../back/models";
 import wrapper from "../../store/configureStore";
 import { useSelector } from "react-redux";
 import { useRouter} from "next/router";
+import Head from 'next/head';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 import { LOAD_POST_REQUEST } from "../../reducers/post";
 import AppLayout from "../../components/AppLayout";

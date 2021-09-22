@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import AppLayout from '../components/AppLayout';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 
@@ -13,6 +13,7 @@ import axios from 'axios';
 import { END } from 'redux-saga';
 
 const Profile = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
 
@@ -29,9 +30,8 @@ const Profile = () => {
     }, []);
 
     if (!me) {
-        if(!alert('로그인 해주세요')) {
-            Router.replace('/');
-        }
+        alert('로그인 해주세요');
+        return router.push('/');
     }
 
     return (

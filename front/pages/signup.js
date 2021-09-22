@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 
 import AppLayout from '../components/appLayout';
 import useInput from '../hooks/useInput';
