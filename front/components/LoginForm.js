@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LOG_IN_REQUEST } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
-    marginTop: 10;
+    margin-top: 10px;
 `;
 
+/*
 const FormWrapper = styled(Form)`
-    padding: 10 px;
+    padding: 10px;
 `;
+*/
 const LoginForm = () => {
     const dispatch = useDispatch();
     const { logInLoading, logInError } = useSelector((state)=>state.user);
@@ -35,7 +37,7 @@ const LoginForm = () => {
 
     //button의 submit실행되면 onFinish 실행된다.
     return (
-        <FormWrapper onFinish={onSubmitForm}>
+        <Form style={{padding: "10px"}} onFinish={onSubmitForm}>
             <div>
                 <label htmlFor="user-email">이메일</label>
                 <br />
@@ -55,7 +57,7 @@ const LoginForm = () => {
                 <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
-        </FormWrapper>
+        </Form>
     )
 }
 

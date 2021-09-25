@@ -19,20 +19,22 @@ color: red;
 //이슈 : 404error 발생
 
 const Signup = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const {  signUpLoading, signUpDone, signUpError, me } = useSelector((state)=>state.user);
 
     //useEffect
     //리액트컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
     useEffect(()=>{
-        if ( me?.id ) { //optional chaining
-            Router.replace('/');
+        if (me?.id) { 
+            alert('이미 로그인 하셨습니다.');
+            router.push('/');
         }
-    },[me]);
+    }, [me?.id]);
 
     useEffect(()=>{
         if (signUpDone) {
-            Router.replace('/');
+            router.push('/');
         }
     }), [signUpDone];
 

@@ -29,10 +29,13 @@ const Profile = () => {
 
     }, []);
 
-    if (!me) {
-        alert('로그인 해주세요');
-        return router.push('/');
-    }
+    useEffect(()=>{
+        if (!(me && me.id)) {
+            alert('로그인 해주세요');
+            return router.push('/');
+        }
+    }, [me?.id]);
+    
 
     return (
         <>

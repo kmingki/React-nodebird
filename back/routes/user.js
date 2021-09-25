@@ -6,6 +6,35 @@ const { User, Post } = require('../models');
 
 const router = express.Router();
 
+router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
+    
+    try {
+        console.log("done***************************");
+        console.log('USER ID : '+req.user.id);
+        const user = await User.findOne({ where: { id: req.user.id }});
+        const followers = await user.getFollowers();
+
+        return res.status(200).send(followers);
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+router.get('/loadFollowings', isLoggedIn, async (req, res, next) => {
+
+    try {
+        const user = await User.findOne({ where: { id: req.user.id }});
+        const followings = await user.getFollowings();
+
+        return res.status(200).send(followings);
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+
 router.get('/', async (req, res, next) => {
     try {
         if (req.user) {
@@ -28,7 +57,7 @@ router.get('/', async (req, res, next) => {
                 }
             ]
             });
-            console.log(fullUserWithoutPassword);
+            //console.log(fullUserWithoutPassword);
             return res.status(200).send(fullUserWithoutPassword);
         } else {
             return res.status(200).send(null);
@@ -174,33 +203,7 @@ router.patch('/changeNickname', isLoggedIn, async (req, res, next)=>{
     }
 });
 
-router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
-    
-    try {
-        const user = await User.findOne({ where: { id: req.user.id }});
-        const followers = await user.getFollowers();
 
-        return res.status(200).send(followers);
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-});
-
-router.get('/loadFollowings', isLoggedIn, async (req, res, next) => {
-
-    try {
-        const user = await User.findOne({ where: { id: req.user.id }});
-        const followings = await user.getFollowings();
-
-        return res.status(200).send(followings);
-        
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-
-});
 
 router.patch('/unfollow/:UserId', isLoggedIn, async (req, res, next)=>{
     

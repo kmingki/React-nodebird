@@ -12,7 +12,7 @@ const configureStore = (context) => {
     //console.log(context);
     const sagaMiddleware=createSagaMiddleware();
     const middlewares = [sagaMiddleware];
-    const enhancer = process.env.NODE_ENV === 'production'
+    const enhancer = process.env.NODE_ENV === 'production' //미들웨어
       ? compose(applyMiddleware(...middlewares))
       : composeWithDevTools(
         applyMiddleware(...middlewares),
