@@ -2,15 +2,14 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { User, Post } = require('../models');
+const { User, Post, Comment, Image } = require('../models');
+const { Op } = require('sequelize');
 
 const router = express.Router();
 
 router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
     
     try {
-        console.log("done***************************");
-        console.log('USER ID : '+req.user.id);
         const user = await User.findOne({ where: { id: req.user.id }});
         const followers = await user.getFollowers();
 
@@ -242,7 +241,6 @@ router.patch('/follow/:UserId', isLoggedIn, async (req, res, next) => {
     }
 });
 
-//patch(`/user/removeFollower/${data}`)
 router.patch('/removeFollower/:UserId', isLoggedIn, async(req, res, next)=>{
 
     try {
@@ -253,13 +251,59 @@ router.patch('/removeFollower/:UserId', isLoggedIn, async(req, res, next)=>{
         }
 
         await user.removeFollowings(req.user.id);
-        console.log(req.user.id);
 
         res.status(200).send({ UserId : parseInt(req.params.UserId, 10)});
 
     } catch (error) {
         console.error(error);
         next(error);
+    }
+});
+//`/user/${data}/posts?lastId=${lastId || 0}`
+router.get('/:userId/posts', async(req, res, next)=>{
+
+    try{
+        const where = { UserId: req.params.userId };
+        if (parseInt(req.query.lastId, 10)) { // 초기 로딩이 아닐때, 스크롤시 게시글 불러오기
+            where.id = { [Op.lt]: parseInt(req.query.lastId, 10)}
+        }
+
+        const posts = await Post.findAll({
+            where,
+            limit: 10,
+            order: [['createdAt', 'DESC']],
+            include: [{
+                model: User,
+                attributes: [ 'id', 'nickname']
+            }, {
+                model: Image
+            }, {
+                model: Comment,
+                include: {
+                    model: User,
+                    attributes: [ 'id', 'nickname' ]
+                  }
+            },{
+                model: User,
+                as: 'Likers',
+                attributes: ['id'],
+                through: {attributes: []},
+            },{
+                model: Post,
+                as: 'Retweet',
+                include : [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image
+                }]
+            }]
+        });
+        console.log(posts);
+        return res.status(200).send(posts);
+    } catch (err){
+        console.error(err);
+        next(err);
     }
 });
 

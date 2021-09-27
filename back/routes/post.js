@@ -93,7 +93,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next)=>{
 
 
 router.post('/images', isLoggedIn, upload.array('image'), async(req, res, next) => {
-    console.log(req.files);
+    //console.log(req.files);
     res.json(req.files.map((v)=> v.filename));
 });
 
@@ -120,7 +120,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next)=>{
                 attributes:  [ 'id', 'nickname' ] //조인한 테이블의 attribute
             }]
         });
-        console.log(fullComment);
+        //console.log(fullComment);
         return res.status(201).send(fullComment);
     }catch(error){
         console.error(error);
@@ -179,7 +179,7 @@ router.delete('/:postId', isLoggedIn, async(req, res, next)=>{ //delete(`/post/$
     } 
 });
 
-router.post('/:postId', async (req, res, next) => { //GET /post/1
+router.get('/:postId', async (req, res, next) => { //GET /post/1
     
     try {
         const post = await Post.findOne({ 

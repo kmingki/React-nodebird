@@ -211,7 +211,7 @@ function * loadFollowings(action){
 
     try{
         const result = yield loadFollowingsAPI();
-
+        
         yield put({
             type: LOAD_FOLLOWINGS_SUCCESS,
             data: result.data

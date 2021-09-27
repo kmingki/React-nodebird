@@ -1,4 +1,4 @@
-import { Post } from "../../../back/models";
+import axios from 'axios';
 import wrapper from "../../store/configureStore";
 import { useSelector } from "react-redux";
 import { useRouter} from "next/router";
@@ -7,12 +7,21 @@ import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 import { LOAD_POST_REQUEST } from "../../reducers/post";
 import AppLayout from "../../components/AppLayout";
 import PostCard from "../../components/PostCard";
+import { END } from 'redux-saga';
+import { useEffect } from 'react';
 
 const Post = () => {
-    const { singlePost } = useSelector((state)=>state.Post);
+    const { singlePost, loadPostError } = useSelector((state)=>state.post);
     const router = useRouter();
-    const { id } = router.query;
 
+    
+    /*
+    if (!singlePost){
+        console.log('***********done************');
+        alert(loadPostError);
+        return router.push('/');
+    }
+    */
     return (
         <AppLayout>
             <Head>

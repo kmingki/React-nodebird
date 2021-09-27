@@ -4,7 +4,7 @@ import AppLayout from '../components/AppLayout';
 import { useRouter } from 'next/router';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
-
+import useSWR from 'swr';
 import { useSelector, useDispatch } from 'react-redux';
 import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST, LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
