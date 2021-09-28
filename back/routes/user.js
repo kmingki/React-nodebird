@@ -11,8 +11,11 @@ router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
     
     try {
         const user = await User.findOne({ where: { id: req.user.id }});
-        const followers = await user.getFollowers();
+        const followers = await user.getFollowers({
+            limit: parseInt(req.query.limit, 10),
+        });
 
+        console.log('followers:'+followers);
         return res.status(200).send(followers);
     } catch (err) {
         console.error(err);
@@ -24,15 +27,16 @@ router.get('/loadFollowings', isLoggedIn, async (req, res, next) => {
 
     try {
         const user = await User.findOne({ where: { id: req.user.id }});
-        const followings = await user.getFollowings();
-
+        const followings = await user.getFollowings({
+            limit: parseInt(req.query.limit, 10),
+        });
+        console.log('followings:'+followings);
         return res.status(200).send(followings);
     } catch (err) {
         console.error(err);
         next(err);
     }
 });
-
 
 router.get('/', async (req, res, next) => {
     try {
@@ -65,44 +69,6 @@ router.get('/', async (req, res, next) => {
     } catch (err) {
         console.log(err);
         next(err);
-    }
-});
-
-router.get('/:id', async (req, res, next) => {
-    try {
-        const fullUserWithoutPassword = await User.findOne({
-            where: { id: req.params.id },
-            attributes: {
-                exclude: ['password']
-            },
-            include: [{
-                model: Post,
-                attributes: ['id'],
-            }, {
-                model: User,
-                as: 'Followers',
-                attributes: ['id']
-            },{
-                model: User,
-                as: 'Followings',
-                attributes: ['id']
-            }
-        ]
-        });
-        
-        if (fullUserWithoutPassword) {
-            const data = fullUserWithoutPassword.toJSON();
-            data.Posts = data.Posts.length;
-            data.Followings = data.Followings.length;
-            data.Followers = data.Followers.length;
-            return res.status(200).json(data);
-        } else {
-            return res.status(404).send('존재하지 않는 사용자입니다.');
-        }
-
-    } catch (error) {
-        console.log(error);
-        next(error);
     }
 });
 
@@ -201,8 +167,6 @@ router.patch('/changeNickname', isLoggedIn, async (req, res, next)=>{
         next(err);
     }
 });
-
-
 
 router.patch('/unfollow/:UserId', isLoggedIn, async (req, res, next)=>{
     
@@ -304,6 +268,44 @@ router.get('/:userId/posts', async(req, res, next)=>{
     } catch (err){
         console.error(err);
         next(err);
+    }
+});
+
+router.get('/:id', async (req, res, next) => {
+    try {
+        const fullUserWithoutPassword = await User.findOne({
+            where: { id: req.params.id },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [{
+                model: Post,
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: 'Followers',
+                attributes: ['id']
+            },{
+                model: User,
+                as: 'Followings',
+                attributes: ['id']
+            }
+        ]
+        });
+        
+        if (fullUserWithoutPassword) {
+            const data = fullUserWithoutPassword.toJSON();
+            data.Posts = data.Posts.length;
+            data.Followings = data.Followings.length;
+            data.Followers = data.Followers.length;
+            return res.status(200).json(data);
+        } else {
+            return res.status(404).send('존재하지 않는 사용자입니다.');
+        }
+
+    } catch (error) {
+        console.log(error);
+        next(error);
     }
 });
 
