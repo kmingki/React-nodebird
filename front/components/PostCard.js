@@ -11,18 +11,19 @@ import PostCardContent from './PostCardContent';
 import CommentForm from './CommentForm';
 import FollowButton from './FollowButton';
 import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import moment from 'moment';
 
 const CardWrapper = styled.div`
     margin-bottom: 20px;
 `;
 const PostCard = ({ post }) => {
+
+    moment.locale('ko');
     const dispatch = useDispatch();
     const { removePostLoading, likePostError } = useSelector((state)=>state.post);
     const [ commentFormOpened, setCommentFormOpened ] = useState(false);
     const { me } = useSelector((state) => state.user);
     const id = me?.id; //me 있으면 id 없으면 undefined
-
-    
 
     const onUnlike = useCallback(()=>{
 
@@ -103,6 +104,7 @@ const PostCard = ({ post }) => {
             ]}
             extra={<FollowButton post={post} />}
             >
+                <span style={{ float: 'right' }}>{moment(post.createdAt).startOf('hour').fromNow()}</span>
                 <Card.Meta
                 avatar={<Link href={`user/${post.User.id}`}><a><Avatar>{post.User.nickname[0]}</Avatar></a></Link>}
                 title={post.User.nickname}

@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
+const PostCardContent = ({ postData }) => {
 
-const PostCardContent = ({ postData }) => (
+  
+
+  return(
     <div>
     {postData.split(/(#[^\s#]+)/g).map((v) => {
       if (v.match(/(#[^\s#]+)/)) {
@@ -20,7 +23,9 @@ const PostCardContent = ({ postData }) => (
       return v;
     })}
   </div>
-);
+  );
+    
+};
 
 PostCardContent.propTypes = {
     postData: PropTypes.string.isRequired,
