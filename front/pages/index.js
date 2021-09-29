@@ -1,72 +1,68 @@
-import React, { useEffect } from 'react';
-import { useDispatch , useSelector } from 'react-redux';
-import { END } from 'redux-saga';
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
-import AppLayout from '../components/AppLayout.js';
-import { LOAD_POSTS_REQUEST } from '../reducers/post';
-import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
-import axios from 'axios';
+import React from 'react';
+import { Form, Input, Button } from 'antd';
+import useInput from '../hooks/useInput';
+import Link from 'next/link';
 
 const Home = () => {
+    
+    const [email, onChangeEmail] = useInput('');
+    const [password, onChangePassword] = useInput('');
+    
+    const onSubmitForm = () => {
 
-    const dispatch = useDispatch();
-    const { me } = useSelector((state)=>state.user);
-    const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
+    };
 
-
-    //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
-    //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
-    useEffect(()=>{
-        if (retweetError){
-            return alert(retweetError);
-        }
-    }, [retweetError]);
-
-    useEffect(()=>{
-        function onScroll(){
-            //scrollY:스크롤을 얼마나 내렸는지 clientHeight: 화면길이
-            if(window.scrollY+document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-                if( hasMorePosts && !loadPostsLoading ){
-                    dispatch({
-                        type: LOAD_POSTS_REQUEST,
-                        data: mainPosts[mainPosts.length - 1]?.id //마지막 post의 id
-                    });
-                }
-            }
-        }
-        window.addEventListener('scroll', onScroll);
-        return () => {
-            window.removeEventListener('scroll', onScroll);
-        };
-    }, [mainPosts, hasMorePosts, loadPostsLoading]);
+    const contentStyle = { 
+        border: "1px solid #E0E0E0", 
+        height: "450px", 
+        width: "500px", 
+        margin: "auto", 
+        marginTop: "100px", 
+        background:"white"
+    };
 
     return (
-        <AppLayout>
-            { me && <PostForm />}
-            {mainPosts.map((c) => {
-        return (<PostCard key={c.id} post={c} />);
-      })}
-        </AppLayout>   
+        <div style={contentStyle}>
+            <h1 style={{textAlign: "center", margin: "30px 0"}}>Chatter</h1>
+            
+            <div className="loginForm" style={{width:"300px", margin:"10px auto"}}>
+                <Form onFinish={onSubmitForm}>
+                    <div>
+                        <Input 
+                        name="user-email" 
+                        type="email"
+                        placeholder="이메일"
+                        size="large"
+                        style={{width:"300px", margin:"10px auto"}} 
+                        value={email} 
+                        onChange={onChangeEmail} 
+                        required />
+                    </div>
+                    <div>
+                        <Input.Password
+                            name="user-password" 
+                            type="password"
+                            placeholder="비밀번호"
+                            size="large"
+                            style={{width : "300px", margin: "10px auto"}} 
+                            value={password} 
+                            onChange={onChangePassword} 
+                            required />
+                    </div>
+                    
+                    <Button type="primary" htmlType="submit" style={{width : "300px", margin: "10px auto"}}>로그인</Button>
+                    <Link href="/findPassWord"><a><p style={{textAlign: "center"}}>비밀번호를 잊으셨나요?</p></a></Link>
+                    
+                    
+                    계정이 없으신가요?  
+                    <Link href="/signup"><a>회원가입</a></Link>
+                
+                </Form>
+            </div>
+        </div>
     );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
-    const cookie = context.req? context.req.headers.cookie : '';
-    axios.defaults.headers.Cookie = '';
-    if (context.req && cookie) {
-        axios.defaults.headers.Cookie = cookie;
-    }
 
-    context.store.dispatch({
-        type: LOAD_MY_INFO_REQUEST,
-    });
-    context.store.dispatch({
-        type: LOAD_POSTS_REQUEST,
-    });
-    context.store.dispatch(END); //REQUEST가 SUCCESS가 될때까지 기다려준다.
-    await context.store.sagaTask.toPromise();
-});
 
 export default Home;
