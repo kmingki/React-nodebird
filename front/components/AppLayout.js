@@ -7,6 +7,24 @@ import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
 import { useSelector } from "react-redux";
 import useInput from '../hooks/useInput';
+import { NodeExpandOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+
+const navContainerStyle={
+    backgroundColor: "blue",
+    listStyleType: "none", /*목록 기호 제거 */
+    margin: "0",
+    padding: "0",
+    overflow: "hidden",
+    zIndex: "100000",
+}
+
+const listStyle =  {
+    float: "left",
+    display: "block",
+    padding: "8px",
+    textDecoration: "none",
+}
 
 const AppLayout = ({children}) => {
     const { me } = useSelector((state)=>state.user);
@@ -17,21 +35,13 @@ const AppLayout = ({children}) => {
 
     return(
         <div>
-            <Menu mode="horizontal">
-                <Menu.Item key="home">
-                    <Link href="/"><a>노드</a></Link>
-                </Menu.Item>
-                <Menu.Item key="profile">
-                    <Link href="/profile"><a>프로필</a></Link>
-                </Menu.Item>
-                <Menu.Item key="search">
-                    <Input.Search enterButton style={{verticalAlign:'middle'}} value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch}/>
-                </Menu.Item>
-                <Menu.Item>
-                    <Link href="/signup"><a>회원가입</a></Link>
-                </Menu.Item>
-            </Menu> 
-            <Row gutter={8}>
+            <ul className="nav-container" style={{navContainerStyle}}>
+                <li className="home" style={listStyle}><Link href="/main"><a><h1 style={{fontFamily: "Playfair Display, serif"}}>Chatter</h1></a></Link></li>
+                <li className="search" style={listStyle}><Input.Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /></li>
+                <li className="message" style={listStyle}><SendOutlined /></li>
+                <li className="profile" style={listStyle}><UserOutlined /></li>
+            </ul>
+            <Row gutter={8} style={{clear: "both"}}>
                 <Col xs={24} md={6}>
                     {me ? <UserProfile /> : <LoginForm />}
                 </Col>

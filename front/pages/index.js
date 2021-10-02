@@ -1,29 +1,43 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import useInput from '../hooks/useInput';
 import Link from 'next/link';
+import { LOG_IN_REQUEST } from '../reducers/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+
+const contentStyle = { 
+    border: "1px solid #E0E0E0", 
+    height: "450px", 
+    width: "500px", 
+    margin: "auto", 
+    marginTop: "100px", 
+    background:"white"
+};
 
 const Home = () => {
-    
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const { me } = useSelector((state)=>state.user);
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
     
-    const onSubmitForm = () => {
+    const onSubmitForm = useCallback(() => {
+        dispatch({
+            type: LOG_IN_REQUEST,
+            data: { email, password },
+        });
+      }, [email, password]);
 
-    };
-
-    const contentStyle = { 
-        border: "1px solid #E0E0E0", 
-        height: "450px", 
-        width: "500px", 
-        margin: "auto", 
-        marginTop: "100px", 
-        background:"white"
-    };
+    useEffect(()=>{
+        if (me && me.id) {
+            return router.push('/main');
+        }
+    }, [me, me?.id]);
 
     return (
         <div style={contentStyle}>
-            <h1 style={{textAlign: "center", margin: "30px 0"}}>Chatter</h1>
+            <h1 style={{textAlign: "center", margin: "50px 0", fontFamily: "Playfair Display, serif", fontSize: "50px"}}>Chatter</h1>
             
             <div className="loginForm" style={{width:"300px", margin:"10px auto"}}>
                 <Form onFinish={onSubmitForm}>
@@ -54,7 +68,7 @@ const Home = () => {
                     <Link href="/findPassWord"><a><p style={{textAlign: "center"}}>비밀번호를 잊으셨나요?</p></a></Link>
                     
                     
-                    계정이 없으신가요?  
+                    계정이 없으신가요?&nbsp;&nbsp;  
                     <Link href="/signup"><a>회원가입</a></Link>
                 
                 </Form>
