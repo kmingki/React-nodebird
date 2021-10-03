@@ -7,24 +7,8 @@ import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
 import { useSelector } from "react-redux";
 import useInput from '../hooks/useInput';
-import { NodeExpandOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
+import { StarOutlined, SendOutlined, UserOutlined, GlobalOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-
-const navContainerStyle={
-    backgroundColor: "blue",
-    listStyleType: "none", /*목록 기호 제거 */
-    margin: "0",
-    padding: "0",
-    overflow: "hidden",
-    zIndex: "100000",
-}
-
-const listStyle =  {
-    float: "left",
-    display: "block",
-    padding: "8px",
-    textDecoration: "none",
-}
 
 const AppLayout = ({children}) => {
     const { me } = useSelector((state)=>state.user);
@@ -34,13 +18,21 @@ const AppLayout = ({children}) => {
     }, [searchInput]);
 
     return(
-        <div>
-            <ul className="nav-container" style={{navContainerStyle}}>
-                <li className="home" style={listStyle}><Link href="/main"><a><h1 style={{fontFamily: "Playfair Display, serif"}}>Chatter</h1></a></Link></li>
-                <li className="search" style={listStyle}><Input.Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /></li>
-                <li className="message" style={listStyle}><SendOutlined /></li>
-                <li className="profile" style={listStyle}><UserOutlined /></li>
-            </ul>
+        <div style={{marginLeft: "150px", marginRight: "150px"}}>
+            <Row gutter={8} style={{backgroundColor: "white", height: "55px"}}>
+                <Col xs={24} md={6}>
+                <Link href="/main"><a><h1 style={{fontFamily: "Playfair Display, serif", fontSize: "30px", marginLeft:"15px"}}>Chatter</h1></a></Link>
+                </Col>
+                <Col xs={24} md={12}>
+                <Input.Search placeholder="검색" onSearch={onSearch} style={{ width: 200, margin: "10px 150px"}} />
+                </Col>
+                <Col xs={24} md={6}>
+                <Link href="/community"><a><GlobalOutlined style={{ fontSize: "25px", marginTop:"15px", color: "#2C2C2C"}}/></a></Link>
+                <Link href="/message"><a><SendOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C"}}/></a></Link>
+                <Link href="/activity"><a><StarOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C" }}/></a></Link>
+                <Link href="/profile"><a><UserOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C" }}/></a></Link>
+                </Col>
+            </Row>
             <Row gutter={8} style={{clear: "both"}}>
                 <Col xs={24} md={6}>
                     {me ? <UserProfile /> : <LoginForm />}
@@ -61,3 +53,12 @@ AppLayout.propTypes = {
 };
 
 export default AppLayout;
+
+
+/**
+ * <ul className="nav-container" style={{navContainerStyle}}>
+                <li className="search" style={listStyle}><Input.Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /></li>
+                <li className="message" style={listStyle}><SendOutlined style={{display: "block"}}/></li>
+                <li className="profile" style={listStyle}><UserOutlined style={{display: "block"}}/></li>
+            </ul>
+ */
