@@ -21,10 +21,10 @@ const AppLayout = ({children}) => {
         <div style={{marginLeft: "150px", marginRight: "150px"}}>
             <Row gutter={8} style={{backgroundColor: "white", height: "55px"}}>
                 <Col xs={24} md={6}>
-                <Link href="/main"><a><h1 style={{fontFamily: "Playfair Display, serif", fontSize: "30px", marginLeft:"15px"}}>Chatter</h1></a></Link>
+                <Link href="/main"><a><h1 style={{fontFamily: "Righteous, cursive", fontSize: "30px", marginLeft:"15px"}}>Chatter</h1></a></Link>
                 </Col>
                 <Col xs={24} md={12}>
-                <Input.Search placeholder="검색" onSearch={onSearch} style={{ width: 200, margin: "10px 150px"}} />
+                <Input.Search placeholder="검색" onSearch={onSearch} style={{ width: 200}} />
                 </Col>
                 <Col xs={24} md={6}>
                 <Link href="/community"><a><GlobalOutlined style={{ fontSize: "25px", marginTop:"15px", color: "#2C2C2C"}}/></a></Link>

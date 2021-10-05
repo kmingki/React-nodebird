@@ -125,11 +125,9 @@ function signUpAPI(data) {
     return axios.post('/user', data);
 }
 
-//put():특정 액션을 dispatch한다.
 function* signUp(action) {
     try {
       const result = yield call(signUpAPI, action.data);
-      console.log(result);
       yield put({
         type: SIGN_UP_SUCCESS,
       });

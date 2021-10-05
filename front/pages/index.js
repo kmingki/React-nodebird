@@ -37,7 +37,7 @@ const Home = () => {
 
     return (
         <div style={contentStyle}>
-            <h1 style={{textAlign: "center", margin: "50px 0", fontFamily: "Playfair Display, serif", fontSize: "50px"}}>Chatter</h1>
+            <h1 style={{textAlign: "center", margin: "50px 0",fontFamily: "Righteous, cursive", fontSize: "50px"}}>Chatter</h1>
             
             <div className="loginForm" style={{width:"300px", margin:"10px auto"}}>
                 <Form onFinish={onSubmitForm}>

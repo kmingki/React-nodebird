@@ -85,11 +85,14 @@ router.post('/', async (req, res, next) => {
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 12);// resolve의 값을 리턴
-        await User.create({
+        const user = await User.create({
             email: req.body.email,
             nickname: req.body.nickname,
             password: hashedPassword,
         });
+
+        console.log(user);
+
         res.status(201).send('ok');
 
     } catch (error) {

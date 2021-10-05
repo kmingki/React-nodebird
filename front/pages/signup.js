@@ -4,19 +4,25 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-
-import AppLayout from '../components/appLayout';
+import Link from 'next/link';
 import useInput from '../hooks/useInput';
 import { SIGN_UP_REQUEST, SIGN_UP_DONE, LOAD_MY_INFO_REQUEST} from '../reducers/user';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
 import { END } from 'redux-saga';
+
 const ErrorMessage = styled.div`
 color: red;
 `;
 
-//cors import 해주고 백엔드 서버 url로 바꿔줬더니 된다
-//이슈 : 404error 발생
+const contentStyle = { 
+    border: "1px solid #E0E0E0", 
+    height: "500px", 
+    width: "500px", 
+    margin: "auto", 
+    marginTop: "100px", 
+    background:"white"
+};
 
 const Signup = () => {
     const router = useRouter();
@@ -25,13 +31,15 @@ const Signup = () => {
 
     //useEffect
     //리액트컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
+    
     useEffect(()=>{
-        if (me?.id) { 
+        if ((!signUpDone) && me?.id) { 
             alert('이미 로그인 하셨습니다.');
-            router.push('/');
+            router.push('/main');
         }
-    }, [me?.id]);
+    }, [me?.id, signUpDone]);
 
+    //회원가입하고 나서 
     useEffect(()=>{
         if (signUpDone) {
             router.push('/');
@@ -50,25 +58,16 @@ const Signup = () => {
     const [password, onChangePassword] = useInput('');
 
     const [passwordCheck, setPasswordCheck] = useState('');
-    const [passwordError, setPasswordError] = useState(false);//passwordError가 원래는 false였음
+    const [passwordError, setPasswordError] = useState(false);
+
     const onChangePasswordCheck = useCallback((e)=>{
         setPasswordCheck(e.target.value);
-        setPasswordError(e.target.value !== password);//다르면 password를 true로 set한다
+        setPasswordError(e.target.value !== password);
     }, [password]);
-
-    const [term, setTerm] = useState('');
-    const [termError, setTermError] = useState(false);
-    const onChangeTerm = useCallback((e) => {
-        setTerm(e.target.checked);
-        setTermError(false);
-    }, []);
 
     const onSubmit = useCallback(()=>{
         if(password !== passwordCheck){
             return setPasswordError(true);
-        }
-        if(!term) {
-            return setTermError(true);
         }
         
         dispatch({
@@ -76,50 +75,78 @@ const Signup = () => {
             data: { email, password, nickname },
         });
         
-    },[password,passwordCheck,term]);
+    },[password,passwordCheck]);
 
     return (
-        <AppLayout>
-            <Head>
-            <title>회원가입 | NodeBird</title>
-            </Head> 
-            <Form onFinish={onSubmit}>
-                <div>
-                    <label htmlFor="user-email">이메일</label>
-                    <br />
-                    <Input name="user-email" type="email" value={email} required onChange={onChangeEmail} />
-                </div>
-                <div>
-                    <label htmlFor="user-nickname">닉네임</label>
-                    <br />
-                    <Input name="user-nickname" value={nickname} required onChange={onChangeNickname} />
-                </div>
-                <div>
-                    <label htmlFor="user-password">비밀번호</label>
-                    <br />
-                    <Input name="user-password" type="password" value={password} required onChange={onChangePassword} />
-                </div>
-                <div>
-                    <label htmlFor="user-password-check">비밀번호체크</label>
-                    <br />
-                    <Input 
-                    name="user-password-check"
-                    type="password"
-                    value={passwordCheck}
-                    required
-                    onChange={onChangePasswordCheck}
-                    />
-                    {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
-                </div>
+        <>
+        <Head>
+        <title>Chatter에 가입하기</title>
+        </Head> 
+        <div style={contentStyle}>
+            <h1 style={{textAlign: "center", margin: "10px 0", fontFamily: "Righteous, cursive", fontSize: "50px"}}>Chatter</h1>
+            <h2 style={{textAlign: "center", fontWeight: "bolder", color: "grey"}}>새 계정 만들기</h2>
+            <div className="loginForm" style={{width:"300px", margin:"10px auto"}}>
+                <Form onFinish={onSubmit} >
                     <div>
-                    <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>제로초 말을 잘 들을 것을 동의합니다.</Checkbox>
-                    {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
+                        <Input 
+                        name="user-email" 
+                        type="email"
+                        placeholder="이메일"
+                        size="large"
+                        style={{width:"300px", margin:"5px auto"}} 
+                        value={email} 
+                        onChange={onChangeEmail} 
+                        required />
                     </div>
-                    <div style={{marginTop: 10}}>
+                    <div>
+                    <Input 
+                            name="user-nickname" 
+                            type="email"
+                            placeholder="닉네임"
+                            size="large"
+                            style={{width:"300px", margin:"5px auto"}} 
+                            value={nickname} 
+                            onChange={onChangeNickname} 
+                            required />
+                        
+                    </div>
+                    <div>
+                        <Input.Password
+                            name="user-password" 
+                            type="password"
+                            placeholder="비밀번호"
+                            size="large"
+                            style={{width : "300px", margin: "5px auto"}} 
+                            value={password} 
+                            onChange={onChangePassword} 
+                            required />
+                    </div>
+                    <div>
+                        <Input.Password
+                            name="user-password-check" 
+                            type="password"
+                            placeholder="비밀번호 확인"
+                            size="large"
+                            style={{width : "300px", margin: "5px auto"}} 
+                            value={passwordCheck} 
+                            onChange={onChangePasswordCheck} 
+                            required />
+                            {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
+                    </div>
+                    <br />
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                         <Button type="primary" htmlType="submit">가입하기</Button>
                     </div>
-            </Form>
-        </AppLayout>
+                    <br />
+                    <div style={{textAlign: "center"}}>
+                        <Link href="/"><a >이미 계정이 있으신가요?</a></Link>
+                    </div>
+                    
+                
+                </Form>
+            </div>
+        </div>
+        </>
     );
 }
 
