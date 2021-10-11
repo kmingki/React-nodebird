@@ -1,16 +1,45 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Card, Avatar, Upload } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { CameraOutlined, EnvironmentOutlined, PlusOutlined } from '@ant-design/icons';
 import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const [text, setText] = useState('');//컴포넌트의 state
-  const { imagePaths, addPostDone }=useSelector((state) => state.post);
-    
   const imageInput = useRef();
-  
+
+  const [text, setText] = useState('');
+  const { imagePaths, addPostDone } = useSelector((state) => state.post);
+  const { me } = useSelector((state) => state.user);
+     
+  const [ previewVisible, setpreviewVisible ] = useState(false);
+  const [ previewImage, setPreviewImage ] = useState('');
+  const [ previewTitle, setPreviewTitle ] = useState('');
+
+  const fileList = imagePaths.map((v, i) => ({ 
+    uid: i,
+    name: v,
+    url: `http://localhost:3065/${v}`
+  }));
+
+  const handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setpreviewVisible(true);
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+  };
 
   /*이미지를 ajax로 업로드 할때 form 전송 필요
   같은 key를 가진 값을 여러개 넣을수 있다.
@@ -70,29 +99,33 @@ const PostForm = () => {
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
   }, []);
-  
-    return (
-        <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
-          <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?" />
-          <div>
-            <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
-            <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-            <Button type="primary" style={{ float: 'right' }} htmlType="submit">짹짹</Button>
-          </div>
-          <div>
-            {imagePaths.map((v, i) => {
-              return (
-                <div key={v} style={{ display: 'inline-block' }}>
-                  <img src={`http://localhost:3065/${v}`} style={{ width: '200px' }} alt={v} />
-                  <div>
-                    <Button onClick={onRemoveImage(i)}>제거</Button>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </Form>
-      );
+
+  return (
+    <Card>
+      <Card.Meta
+      avatar={<Avatar>{me.nickname[0]}</Avatar>}
+      title={me.nickname}
+      />
+      <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
+        <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="어떤 신기한 일이 있었나요?" bordered={false}/>
+        <div style={{ margin: '10px 0'}}>
+          <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
+          <Button type="text" onClick={onClickImageUpload}><CameraOutlined /></Button>
+          <Button type="text" onClick={onClickImageUpload}><EnvironmentOutlined /></Button>
+          <Button type="primary" shape="round" style={{ float: 'right' }} htmlType="submit">업로드</Button>
+        </div>
+      </Form>
+      <div>
+        <Upload
+          listType="picture-card"
+          fileList={fileList}
+          onPreview={handlePreview}
+        >
+        </Upload>
+
+        </div>
+      </Card>
+    );
 };
 
 export default PostForm;

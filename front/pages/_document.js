@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <body>
+        <body style={{minWidth: "33.33%"}}>
           <Main />
           <NextScript />
         </body>

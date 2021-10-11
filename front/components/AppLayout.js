@@ -18,30 +18,23 @@ const AppLayout = ({children}) => {
     }, [searchInput]);
 
     return(
-        <div style={{marginLeft: "150px", marginRight: "150px"}}>
-            <Row gutter={8} style={{backgroundColor: "white", height: "55px"}}>
+        <div>
+            <Row gutter={8} style={{clear: "both"}}>
+                
                 <Col xs={24} md={6}>
                 <Link href="/main"><a><h1 style={{fontFamily: "Righteous, cursive", fontSize: "30px", marginLeft:"15px"}}>Chatter</h1></a></Link>
-                </Col>
-                <Col xs={24} md={12}>
-                <Input.Search placeholder="검색" onSearch={onSearch} style={{ width: 200}} />
-                </Col>
-                <Col xs={24} md={6}>
-                <Link href="/community"><a><GlobalOutlined style={{ fontSize: "25px", marginTop:"15px", color: "#2C2C2C"}}/></a></Link>
+                    {me ? <UserProfile /> : <LoginForm />}
+                    <Link href="/community"><a><GlobalOutlined style={{ fontSize: "25px", marginTop:"15px", color: "#2C2C2C"}}/></a></Link>
                 <Link href="/message"><a><SendOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C"}}/></a></Link>
                 <Link href="/activity"><a><StarOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C" }}/></a></Link>
                 <Link href="/profile"><a><UserOutlined style={{ fontSize: "25px", marginTop:"15px", marginLeft:"15px", color: "#2C2C2C" }}/></a></Link>
                 </Col>
-            </Row>
-            <Row gutter={8} style={{clear: "both"}}>
-                <Col xs={24} md={6}>
-                    {me ? <UserProfile /> : <LoginForm />}
-                </Col>
                 <Col xs={24} md={12}>
+                <Link href="/main"><a><h1 style={{fontSize: "30px", marginLeft:"15px"}}>Home</h1></a></Link>
                 {children}
                 </Col>
                 <Col xs={24} md={6}>
-                <a href="https://www.naver.com" target="_blank" rel="noreferrer noopener">Made by Minji</a>
+                <Input.Search placeholder="검색" onSearch={onSearch}/>
                 </Col>
             </Row>
         </div>
