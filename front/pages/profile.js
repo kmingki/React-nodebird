@@ -15,6 +15,7 @@ import { END } from 'redux-saga';
 const fetcher = (url) => axios.get(url, { withCredentials: true}).then((result)=>result.data);
 
 const Profile = () => {
+    console.log('profile');
     const router = useRouter();
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);

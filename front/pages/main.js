@@ -8,9 +8,10 @@ import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
+import Router from 'next/router';
 
 const Main = () => {
-
+    console.log("main render");
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
@@ -41,17 +42,34 @@ const Main = () => {
             window.removeEventListener('scroll', onScroll);
         };
     }, [mainPosts, hasMorePosts, loadPostsLoading]);
-
+    
+    useEffect(()=>{
+        if (!me) {
+            return Router.push('/');
+        }
+    }, [me]);
+    
     return (
-        <AppLayout>
+        <>
+        { me && <AppLayout>
             { me && <PostForm />}
             {mainPosts.map((post) => {
         return (<PostCard key={post.id} post={post} />);
       })}
-        </AppLayout>   
+        </AppLayout> }
+          
+        </>
     );
 };
 
+
+/*
+{me && <AppLayout>
+           <PostForm />
+            mainPosts.map((post) => {
+        return (<PostCard key={post.id} post={post} />);})
+        </AppLayout>}
+*/
 export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
     const cookie = context.req? context.req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';

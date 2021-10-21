@@ -1,18 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { Menu, Input, Row, Col, Button, Avatar } from "antd";
+import { Menu, Input, Row, Col, Button, Avatar, Dropdown } from "antd";
 import Router from 'next/router';
-import LoginForm from './LoginForm';
-import UserProfile from './UserProfile';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useInput from '../hooks/useInput';
 import { StarOutlined, SendOutlined, UserOutlined, GlobalOutlined, HomeOutlined, SearchOutlined, ConsoleSqlOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
+import { LOG_OUT_REQUEST } from '../reducers/user';
+
 
 const AppLayout = ({children}) => {
+    const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
     const [searchInput, onChangeSearchInput] = useInput('');
+
     const onSearch = useCallback(()=>{
         Router.push(`/hashtag/${searchInput}`);
     }, [searchInput]);
@@ -21,6 +23,21 @@ const AppLayout = ({children}) => {
         window.scrollTo({top:0, left:0, behavior:'auto'});
     };
 
+    const onLogOut = useCallback(()=>{
+        dispatch({
+            type: LOG_OUT_REQUEST,
+        });
+
+    }, [LOG_OUT_REQUEST]);
+
+    const menu = (
+        <Menu>
+          <Menu.Item>
+              <a onClick={onLogOut}>Log out</a> 
+          </Menu.Item>
+        </Menu>
+    );
+    
     return(
         <div>
             <Row style={{clear: "both"}}>
@@ -38,29 +55,30 @@ const AppLayout = ({children}) => {
                 </Col>
 
                 <Col xs={0} md={4} >
-                <Link href="/main"><a><h1 style={{fontFamily: "Righteous, cursive", fontSize: "30px", marginLeft:"15px"}}>Chatter</h1></a></Link>
                 <div style={{margin: "50px 0"}}>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", width: "200px", fontSize: "20px"}} icon={<HomeOutlined style={{color: "#2C2C2C"}}/>}>Home</Button>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", width: "200px", fontSize: "20px"}} icon={<GlobalOutlined style={{color: "#2C2C2C"}}/>}>Explore</Button>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", width: "200px", fontSize: "20px"}} icon={<SendOutlined style={{color: "#2C2C2C"}}/>}>Message</Button>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", width: "200px", fontSize: "20px"}} icon={<StarOutlined style={{color: "#2C2C2C"}}/>}>Notification</Button>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", width: "200px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>}>Profile</Button>
+                <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<img src="twitter.png" width="50px" height="50px"/>} onClick={toTop}></Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<HomeOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Home</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<GlobalOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Explore</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<SendOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Message</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<StarOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Notification</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Profile</Button>
                 </div>
-                <br />
-                <br />
-                <Button type="text" shape="round" style={{display: "block", margin: "10px auto", height: "50%", width: "70%", fontSize: "20px"}} icon={<Avatar>{me.nickname[0]}</Avatar>}>
-                    &nbsp;<div style={{display: "inline-block"}}><p style={{fontSize: "15px"}}>{me.nickname}{me.email}</p></div></Button>
+                <Dropdown overlay={menu}>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<Avatar>{me.nickname[0]}</Avatar>}>
+                    &nbsp;<div style={{display: "inline-block"}}><p style={{fontSize:"18px"}}>&nbsp;&nbsp;{me.email}</p></div></Button>
+                </Dropdown>
+                
                 </Col>
 
                 <Col xs={21} md={12} >
                 <div style={{borderStyle: "solid", borderWidth: "thin", borderColor: "#e2e2e2"}}>
-                <Link href="/main"><a><h1 style={{fontSize: "30px", marginLeft:"15px"}}>Home</h1></a></Link>
+                <Link href="/main"><a><h1 style={{fontSize: "25px", marginLeft:"15px"}}>Home</h1></a></Link>
                 {children}
                 </div>
                 </Col>
 
-                <Col xs={0} md={6}>
-                <Input.Search placeholder="검색" onSearch={onSearch}/>
+                <Col xs={0} md={4} style={{paddingLeft: "10px"}}>
+                <Input.Search placeholder="검색" onSearch={onSearch} style={{marginTop: "10px"}}/>
                 </Col>
                 <Col xs={0} md={2} >
                 </Col>
@@ -74,12 +92,3 @@ AppLayout.propTypes = {
 };
 
 export default AppLayout;
-
-
-/**
- * <ul className="nav-container" style={{navContainerStyle}}>
-                <li className="search" style={listStyle}><Input.Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /></li>
-                <li className="message" style={listStyle}><SendOutlined style={{display: "block"}}/></li>
-                <li className="profile" style={listStyle}><UserOutlined style={{display: "block"}}/></li>
-            </ul>
- */
