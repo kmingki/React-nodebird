@@ -40,11 +40,11 @@ const AppLayout = ({children}) => {
     
     return(
         <div>
-            <Row style={{clear: "both"}}>
-                <Col xs={0} md={2} >
-                </Col>
-                <Col xs={3} sm={3} md={0}>
-                <div style={{height: "100%", position: "fixed", borderRight: "solid thin #e2e2e2"}}>
+            <Row>
+
+                <Col xs={3} sm={4} md={0} style={{height: "100%", position: "fixed", borderRight: "solid thin #e2e2e2", zIndex: "2", backgroundColor:"white"}}>
+                <div>
+                <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<img src="twitter.png" width="50px" height="50px"/>} onClick={toTop}></Button>
                 <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<HomeOutlined style={{color: "#2C2C2C", fontSize: "23px", fontWeight: "100"}}/>} onClick={toTop}></Button>
                 <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<SearchOutlined style={{color: "#2C2C2C", fontSize: "23px"}}/>}></Button>
                 <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<SendOutlined style={{color: "#2C2C2C", fontSize: "23px"}}/>}></Button>
@@ -54,8 +54,8 @@ const AppLayout = ({children}) => {
                 </div>
                 </Col>
 
-                <Col xs={0} sm={0} md={4} >
-                <div style={{margin: "50px 0"}}>
+                <Col xs={0} sm={0} md={4} offset={2} style={{position: "fixed"}}>
+                <div>
                 <Button type="text" shape="circle" style={{display: "block", margin: "10px 5px", height: "50px", width: "50px"}} icon={<img src="twitter.png" width="50px" height="50px"/>} onClick={toTop}></Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<HomeOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Home</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<GlobalOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Explore</Button>
@@ -70,22 +70,37 @@ const AppLayout = ({children}) => {
                 
                 </Col>
 
-                <Col xs={21} sm={12} md={12} >
-                <div>
-                <div style={{top: "0", position: "fixed", width: "50%", borderBottom: "solid thin #e2e2e2", backgroundColor:"white", zIndex: "1", cursor: "pointer"}} onClick={toTop}>
+                <Col xs={21} sm={0} md={0} style={{marginLeft: "12.5%"}}>
+                <div style={{top: "0", position: "fixed", width: "100%", borderBottom: "solid thin #e2e2e2", backgroundColor:"white", zIndex: "1", cursor: "pointer"}} onClick={toTop}>
+                <h1 style={{fontSize: "25px"}}>&nbsp;&nbsp;&nbsp;Home</h1>
+                </div>
+                <div style={{marginTop: "50px"}}>
+                {children}
+                </div>
+                </Col>
+
+                <Col xs={0} sm={20} md={0} offset={2}>
+                <div style={{top: "0", position: "fixed", width: "100%", borderBottom: "solid thin #e2e2e2", backgroundColor:"white", zIndex: "1", cursor: "pointer"}} onClick={toTop}>
+                <h1 style={{fontSize: "25px"}}>&nbsp;&nbsp;&nbsp;Home</h1>
+                </div>
+                <div style={{marginTop: "50px", zIndex: "-1"}}>
+                {children}
+                </div>
+                </Col>
+
+                <Col xs={0} sm={0} md={12} offset={6} style={{borderLeft: "solid thin #e2e2e2" , borderRight: "solid thin #e2e2e2"}}>
+                <div style={{top: "0", position: "fixed", width: "49.8%", borderBottom: "solid thin #e2e2e2", backgroundColor:"white", zIndex: "1", cursor: "pointer"}} onClick={toTop}>
                 <h1 style={{fontSize: "25px", marginLeft:"15px"}}>Home</h1>
                 </div>
                 <div style={{marginTop: "50px"}}>
                 {children}
                 </div>
-                </div>
                 </Col>
 
-                <Col xs={0} sm={4} md={4} >
+                <Col xs={0} sm={0} md={4} offset={18} style={{position: "fixed" }}>
                 <Input.Search placeholder="검색" onSearch={onSearch} style={{marginTop: "10px", marginLeft: "10px"}}/>
                 </Col>
-                <Col xs={0} md={2} >
-                </Col>
+
             </Row>
         </div>
     );
