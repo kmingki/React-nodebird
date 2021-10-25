@@ -9,9 +9,9 @@ import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
 import Router from 'next/router';
+import SideBar from '../components/SideBar';
 
 const Main = () => {
-    console.log("main render");
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
@@ -51,7 +51,7 @@ const Main = () => {
     
     return (
         <>
-        { me && <AppLayout>
+        { me && <AppLayout SideBar={<SideBar/>}>
             { me && <PostForm />}
             {mainPosts.map((post) => {
         return (<PostCard key={post.id} post={post} />);
@@ -62,14 +62,6 @@ const Main = () => {
     );
 };
 
-
-/*
-{me && <AppLayout>
-           <PostForm />
-            mainPosts.map((post) => {
-        return (<PostCard key={post.id} post={post} />);})
-        </AppLayout>}
-*/
 export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
     const cookie = context.req? context.req.headers.cookie : '';
     axios.defaults.headers.Cookie = '';

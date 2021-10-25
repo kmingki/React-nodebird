@@ -16,7 +16,6 @@ const contentStyle = {
 };
 
 const Home = () => {
-    console.log("Home");
     const dispatch = useDispatch();
     const router = useRouter();
     const { me } = useSelector((state)=>state.user);
