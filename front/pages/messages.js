@@ -6,8 +6,8 @@ import Chat from '../components/Chat';
 const Messages = () => {
 
     return(
-        <AppLayout SideBar={<Room/>}>
-        <Chat />
+        <AppLayout SideBar={<Chat/>}>
+            <Room />
         </AppLayout>
     );
 }

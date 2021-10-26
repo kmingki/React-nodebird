@@ -31,6 +31,10 @@ const AppLayout = ({children, SideBar, HomeBar}) => {
         return router.push('/messages');
     });
 
+    const onClickProfile = useCallback(()=>{
+        return router.push('/profile');
+    });
+
     const menu = (
         <Menu>
           <Menu.Item>
@@ -62,7 +66,7 @@ const AppLayout = ({children, SideBar, HomeBar}) => {
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<GlobalOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Explore</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<MailOutlined style={{color: "#2C2C2C"}}/>} onClick={onClickMessages}>&nbsp;Messages</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<StarOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Notification</Button>
-                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Profile</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>} onClick={onClickProfile}>&nbsp;Profile</Button>
                 </div>
                 <Dropdown overlay={menu} trigger={['click']} overlayStyle={{position: "fixed"}}>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<Avatar>{me.nickname[0]}</Avatar>}>
@@ -90,7 +94,7 @@ const AppLayout = ({children, SideBar, HomeBar}) => {
                 </Col>
 
                 <Col xs={0} sm={0} md={10} offset={6} style={{height: "100%", borderLeft: "solid thin #EFEEF5", borderRight: "solid thin #EFEEF5"}}>
-                <div style={{marginTop: "50px"}}>
+                <div>
                 {children}
                 </div>
                 </Col>

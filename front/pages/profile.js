@@ -11,6 +11,7 @@ import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
 import { END } from 'redux-saga';
+import UserProfile from '../components/UserProfile';
 
 const fetcher = (url) => axios.get(url, { withCredentials: true}).then((result)=>result.data);
 
@@ -53,9 +54,10 @@ const Profile = () => {
     return (
         <>
             <Head>
-                <title>내 프로필 | NodeBird</title>    
+                <title>{me.nickname}</title>    
             </Head>
         <AppLayout>
+            <UserProfile />
             <NicknameEditForm />
             <FollowList header="팔로잉 목록" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingsError}/>
             <FollowList header="팔로워 목록" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followersError}/>
