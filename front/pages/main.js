@@ -3,7 +3,8 @@ import { useDispatch , useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
-import AppLayout from '../components/AppLayout.js';
+import MobileLayout from '../components/layout/MobileLayout.js';
+import DesktopLayout from '../components/layout/DesktopLayout.js';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
@@ -11,11 +12,17 @@ import axios from 'axios';
 import Router from 'next/router';
 import SideBar from '../components/SideBar';
 
+import Title from '../components/layout/Title';
+import Menu from '../components/layout/Menu';
+
+import { useMediaQuery } from 'react-responsive';
+
 const Main = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state)=>state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
-
+    const isMobile = useMediaQuery({ maxWidth: 767 });
+    const isDesktop = useMediaQuery({ minWidth: 992 })
 
     //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
     //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
@@ -51,12 +58,25 @@ const Main = () => {
     
     return (
         <>
-        { me && <AppLayout SideBar={<SideBar/>}>
+        { isMobile && (<MobileLayout Header={<Title />} Menu={<Menu />}>
+            <div style={{display:"flex", flexFlow:"row wrap", alignContent: "flex-start", marginTop:"50px", zIndex:"0"}}>
             { me && <PostForm />}
             {mainPosts.map((post) => {
-        return (<PostCard key={post.id} post={post} />);
-      })}
-        </AppLayout> }
+                return (<PostCard key={post.id} post={post} />);
+            })}
+            </div>
+            </MobileLayout>)
+            }
+
+        { isDesktop && (<DesktopLayout Side={<SideBar />}>
+                    { me && <PostForm />}
+                    {mainPosts.map((post) => {
+                        return (<PostCard key={post.id} post={post} />);
+                    })}
+                    </DesktopLayout>)
+        }
+
+        
           
         </>
     );
@@ -81,3 +101,13 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
 });
 
 export default Main;
+
+
+/**
+{ me && <AppLayout SideBar={<SideBar/>}>
+            { me && <PostForm />}
+            {mainPosts.map((post) => {
+        return (<PostCard key={post.id} post={post} />);
+      })}
+        </AppLayout> }
+        */

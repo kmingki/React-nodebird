@@ -137,7 +137,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_configureStore_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store/configureStore.js */ "./store/configureStore.js");
 /* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-dev-runtime */ "react/jsx-dev-runtime");
 /* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_6__);
-var _jsxFileName = "C:\\Users\\User\\Desktop\\node-bird\\react-nodebird\\front\\pages\\_app.js";
+var _jsxFileName = "C:\\Users\\User\\Desktop\\chatter\\chatter\\front\\pages\\_app.js";
 
 
 
