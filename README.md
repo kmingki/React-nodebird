@@ -14,25 +14,25 @@ React로 개발한 SNS 서비스
 
 ## Execution screen
 ### 로그인
-![Chatter 로그인](https://user-images.githubusercontent.com/63445553/139592033-40a8ca02-75e0-4294-8dec-5f7a720cdec8.gif)
+![Chatter 로그인 (1)](https://user-images.githubusercontent.com/63445553/140089917-08eff22c-ef8b-48ff-af80-0210735395b1.gif)
 
 ### 가입하기
 ![Chatter 가입하기](https://user-images.githubusercontent.com/63445553/139591742-64928012-d831-46be-9731-53691fa7097d.png)
 
 ### 게시글 작성
-![Chatter 게시글 작성](https://user-images.githubusercontent.com/63445553/139592068-c5f35656-2d01-4219-bda6-ce79c731b493.gif)
+![Chatter 게시글 작성 (1)](https://user-images.githubusercontent.com/63445553/140090059-5bf878bf-97cc-4860-81da-cb9cf6b7837f.gif)
 
 ### 리트윗/팔로우/언팔로우
-![Chatter 리트윗 팔로우](https://user-images.githubusercontent.com/63445553/139592083-6dc2818a-a640-403f-bb1f-338cd90c0c81.gif)
+![Chatter 리트윗 팔로우 (1)](https://user-images.githubusercontent.com/63445553/140090128-1bb059a6-c813-4f8a-b10c-3b5d83a17913.gif)
 
 ### 인피니트 스크롤링
-![Chatter 인피니트 스크롤링](https://user-images.githubusercontent.com/63445553/139592106-d98be1df-9a1d-4c77-a614-775ca51902f5.gif)
+![Chatter 인피니트 스크롤링 (1)](https://user-images.githubusercontent.com/63445553/140090204-cb30d8c0-c78d-4218-8dbf-3bd2db6e70ae.gif)
 
 ### 좋아요/댓글작성
-![Chatter좋아요 댓글](https://user-images.githubusercontent.com/63445553/139592130-cece12ff-683b-49f7-874a-4d4136066121.gif)
+![Chatter좋아요 댓글 (1)](https://user-images.githubusercontent.com/63445553/140090309-4f3cb104-7942-4b8b-80d4-20eb92c29cef.gif)
 
 ### 상세 이미지 페이지
-![Chatter 캐루셀](https://user-images.githubusercontent.com/63445553/139592145-fee0885f-2ac1-4f44-9749-5167d8a413b4.gif)
+![Chatter 캐루셀 (1)](https://user-images.githubusercontent.com/63445553/140090399-7239e47e-64fc-4435-91eb-4e6f51ffa445.gif)
 
 ### 채팅서비스
 
