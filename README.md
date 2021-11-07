@@ -34,6 +34,10 @@ React로 개발한 SNS 서비스
 ### 상세 이미지 페이지
 ![Chatter 캐루셀 (1)](https://user-images.githubusercontent.com/63445553/140090399-7239e47e-64fc-4435-91eb-4e6f51ffa445.gif)
 
+### 기기별 반응형 화면
+![Chatter - Chrome 2021-11-07 오후 12_58_21](https://user-images.githubusercontent.com/63445553/140631944-2c0622bd-48a2-4323-9922-f596af0e3432.png)
+![Chatter - Chrome 2021-11-07 오후 12_59_55](https://user-images.githubusercontent.com/63445553/140631953-98dd803b-805c-4952-8629-058a0faab1c9.png)
+
 ### 채팅서비스
 
 ### PROFILE PAGE

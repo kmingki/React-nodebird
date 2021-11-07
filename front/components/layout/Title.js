@@ -24,7 +24,7 @@ const Title = () => {
     return(
         <>
         <div style={style} onClick={toTop}>
-            <h1 style={{margin:"0"}}>&nbsp;&nbsp;&nbsp;Home</h1>
+            <h2 style={{margin:"0"}}>&nbsp;&nbsp;&nbsp;Home</h2>
         </div>
         </>
     );
