@@ -52,10 +52,10 @@ const DesktopLayout = ({children, Side}) => {
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<StarOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Notification</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>} onClick={onClickProfile}>&nbsp;Profile</Button>
             </div>
-            <div style={{width:"50%"}}>
+            <div style={{width:"50%", borderRight: "solid thin #EFEEF5", borderLeft: "solid thin #EFEEF5"}}>
             {children}
             </div>
-            <div style={{width:"30%"}}>
+            <div style={{width:"30%", borderRight: "solid thin #EFEEF5"}}>
             {Side}
             </div>
         </div>

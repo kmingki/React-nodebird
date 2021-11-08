@@ -12,7 +12,10 @@ const SideBar = () => {
     }, [searchInput]);
 
     return (
-        <Input.Search placeholder="검색" onSearch={onSearch} style={{marginTop: "10px", marginLeft: "10px"}}/>
+        <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
+            <Input.Search placeholder="검색" onSearch={onSearch} style={{margin: "10px", width: "80%"}}/>
+        </div>
+        
     );
 };
 

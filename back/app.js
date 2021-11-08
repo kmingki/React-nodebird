@@ -11,6 +11,7 @@ const postRouter=require('./routes/post');
 const hashtagRouter=require('./routes/hashtag');
 const db=require('./models');
 const passportConfig = require('./passport');
+const webSocket = require('./socket');
 
 const app = express();
 db.sequelize.sync()

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, List, Avatar } from 'antd';
+import { Button, List, Avatar, Modal, Input } from 'antd';
 
 const listData = [];
 for (let i = 0; i < 23; i++) {
@@ -13,11 +13,29 @@ for (let i = 0; i < 23; i++) {
   });
 }
 
-const Room = () => {
+const Room = ({ height}) => {
+    //서버사이드렌더링 - pre rendering 해야할 필요가 있을까?
+    const [visible, onChangeVisible] = useState(false);
+
+    const showModal = () => {
+        onChangeVisible(true);
+    }
+
+    const handleCancel = () => {
+        onChangeVisible(false);
+    }
+
+    const handleOk = () => {
+        console.log('ok');
+    }
+
+    const onSearch = () => {
+        console.log('ok');
+    }
 
     return (
         <div>
-
+        
         <div className="messageTitle" style={{height: "50px", borderBottom: "solid thin #EFEEF5", display: "flex"}}>
             <div style={{width: "600px", display:"flex"}}>
                 <div style={{display:"flex", alignItems:"center", flexGrow: "1"}}>
@@ -27,13 +45,27 @@ const Room = () => {
                 </div>
                 <div style={{display:"flex", alignItems:"center", flexGrow: "0"}}>
                     <div>
-                        <Button type="text" shape="circle" icon={<PlusOutlined />} style={{margin: "0 15px"}} size="large"></Button>
+                        <Button type="text" shape="circle" onClick={showModal} icon={<PlusOutlined />} style={{margin: "0 15px"}} size="large"></Button>
                     </div>
+                    <Modal
+                    visible={visible}
+                    title="New Messages"
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    bodyStyle={{height: "500px"}}
+                    footer={[
+                        <Button key="submit" type="primary" onClick={handleOk}>
+                        Next
+                        </Button>,
+                        ]}
+                    >
+                    <Input.Search placeholder="Search People" onSearch={onSearch} bordered={false}  />
+                    </Modal>
                 </div>
             </div>
         </div>
 
-        <div>
+        <div id="scrollableDiv" style={{height: height-50 , overflow: 'auto'}}>
         <List
         itemLayout="vertical"
         dataSource={listData}

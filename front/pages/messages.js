@@ -1,15 +1,16 @@
 import React from 'react';
-import AppLayout from '../components/AppLayout';
 import Room from '../components/Room';
 import Chat from '../components/Chat';
+import DesktopLayout from '../components/layout/DesktopLayout';
 
 const Messages = () => {
 
     return(
-        <AppLayout SideBar={<Chat/>}>
-            <Room />
-        </AppLayout>
+        <DesktopLayout Side={<Room height={document.documentElement.clientHeight}/>}>
+            <Chat />
+        </DesktopLayout>
     );
 }
+
 
 export default Messages;

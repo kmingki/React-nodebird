@@ -23,9 +23,9 @@ const Main = () => {
     const { me } = useSelector((state)=>state.user);
     const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state)=>state.post);
     const isMobile = useMediaQuery({ maxWidth: 500 }); //~500
-    const isTablet = useMediaQuery({ minWidth: 501}); //501~1023
+    const isTablet = useMediaQuery({ minWidth: 501, maxWidth: 1023}); //501~1023
     const isDesktop = useMediaQuery({ minWidth: 1024 });
-    const isBigDesktop = useMediaQuery({ minWidth: 1280 });
+    //const isBigDesktop = useMediaQuery({ minWidth: 1280 });
 
     //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
     //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
@@ -38,7 +38,7 @@ const Main = () => {
     useEffect(()=>{
         function onScroll(){
             //scrollY:스크롤을 얼마나 내렸는지 clientHeight: 화면길이
-            if(window.scrollY+document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+            if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
                 if( hasMorePosts && !loadPostsLoading ){
                     dispatch({
                         type: LOAD_POSTS_REQUEST,
