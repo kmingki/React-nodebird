@@ -12,6 +12,7 @@ const NodeBird = ({ Component }) => {
             <Head>
                 <meta charSet="utf-8" />
                 <title>Chatter</title>
+                <link rel='icon' type='image/x-icon' href='/favicon.ico'></link>
             </Head>
             <Component />
         </>

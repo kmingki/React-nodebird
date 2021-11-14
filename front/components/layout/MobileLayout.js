@@ -19,7 +19,7 @@ const MobileLayout = ({children, Header, Menu}) => {
 
     return(
         <>
-        <div id="wrap">
+        <div>
             {Header}
             <div className="children" style={{marginTop: "49px"}}>
             {children}

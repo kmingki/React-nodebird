@@ -268,7 +268,7 @@ router.get('/:userId/posts', async(req, res, next)=>{
         });
         console.log(posts);
         return res.status(200).send(posts);
-    } catch (err){
+    } catch (err) {
         console.error(err);
         next(err);
     }
@@ -307,7 +307,27 @@ router.get('/:id', async (req, res, next) => {
         }
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        next(error);
+    }
+});
+
+router.get('/search/:userName', async (req, res, next) => {
+    
+    
+    try {
+        const users = await User.findAll({
+            where: { nickname: req.params.userName },
+            attributes: {
+                exclude: ['password']
+            },
+        });
+
+        
+        return res.status(200).send(users);
+
+    } catch (error) {
+        console.error(error);
         next(error);
     }
 });

@@ -2,6 +2,10 @@
 import produce from "immer";
 
 export const initialState = {
+    searchUserLoading: false, // 유저 정보 검색 시도중
+    searchUserDone: false,
+    searchUserError: null,
+    searchUserResult: [],
     loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
     loadMyInfoDone: false,
     loadMyInfoError: null,
@@ -38,6 +42,10 @@ export const initialState = {
     me: null,
     userInfo: null,
 };
+
+export const SEARCH_USER_REQUEST = 'SEARCH_USER_REQUEST';
+export const SEARCH_USER_SUCCESS = 'SEARCH_USER_SUCCESS';
+export const SEARCH_USER_FAILURE = 'SEARCH_USER_FAILURE';
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
@@ -89,6 +97,22 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch(action.type){
+    case SEARCH_USER_REQUEST:
+        draft.searchUserLoading=true;
+        draft.searchUserDone=false;
+        draft.searchUserError=null;
+        break;
+    case SEARCH_USER_SUCCESS:
+        draft.searchUserResult=action.data;
+        draft.searchUserLoading=false;
+        draft.searchUserDone=true;
+        draft.searchUserError=null;
+        break;
+    case SEARCH_USER_FAILURE:
+        draft.searchUserLoading=false;
+        draft.searchUserDone=false;
+        draft.searchUserError=action.error;
+        break;
     case LOAD_MY_INFO_REQUEST:
         draft.loadMyInfoLoading = true;
         draft.loadMyInfoDone = false;

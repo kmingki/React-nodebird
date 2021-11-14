@@ -2,6 +2,9 @@ import { all, delay, fork, takeLatest, put, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
+    SEARCH_USER_REQUEST,
+    SEARCH_USER_SUCCESS,
+    SEARCH_USER_FAILURE,
     LOAD_MY_INFO_REQUEST,
     LOAD_MY_INFO_SUCCESS,
     LOAD_MY_INFO_FAILURE,
@@ -37,6 +40,27 @@ import {
     CHANGE_NICKNAME_FAILURE,
   } from '../reducers/user';
 
+function searchUserAPI(data) {
+    return axios.get(`/user/search/${data}`);
+}
+
+function * searchUser (action) {
+    try {
+        const result = yield call(searchUserAPI, action.data);
+        yield put({
+            type: SEARCH_USER_SUCCESS,
+            data: result.data 
+        });
+
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: SEARCH_USER_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
 function loadMyInfoAPI() {
     return axios.get('/user');
 }
@@ -52,7 +76,7 @@ function * loadMyInfo (action) {
     } catch (err) {
         console.error(err);
         yield put({
-            type:LOAD_MY_INFO_FAILURE,
+            type: LOAD_MY_INFO_FAILURE,
             error: err.response.data,
         });
     }
@@ -249,7 +273,6 @@ function removeFollowerAPI(data) {
 }
 
 function * removeFollower(action) {
-    console.log("DONE");
     try {
         const result = yield call(removeFollowerAPI, action.data.id); // result.data.nickname
         yield put({
@@ -263,6 +286,10 @@ function * removeFollower(action) {
             error: err.response.data
         });
     }
+}
+
+function * watchSearchUser() {
+    yield takeLatest(SEARCH_USER_REQUEST, searchUser);
 }
 
 function * watchChangeNickname() {
@@ -311,6 +338,7 @@ function * watchRemoveFollower() {
 
 export default function * userSaga(){
     yield all([
+        fork(watchSearchUser),
         fork(watchRemoveFollower),
         fork(watchLoadFollowers),
         fork(watchLoadFollowings),

@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, List, Avatar, Modal, Input } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { SEARCH_USER_REQUEST } from '../reducers/user';
 
+/*
 const listData = [];
 for (let i = 0; i < 23; i++) {
   listData.push({
@@ -12,9 +15,12 @@ for (let i = 0; i < 23; i++) {
       'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
   });
 }
+*/
 
 const Room = ({ height}) => {
     //서버사이드렌더링 - pre rendering 해야할 필요가 있을까?
+    const dispatch = useDispatch();
+    const { searchUserResult } = useSelector((state) => state.user);
     const [visible, onChangeVisible] = useState(false);
 
     const showModal = () => {
@@ -29,9 +35,18 @@ const Room = ({ height}) => {
         console.log('ok');
     }
 
-    const onSearch = () => {
-        console.log('ok');
+    const onSearch = (e) => {
+        dispatch({
+            type: SEARCH_USER_REQUEST,
+            data: e
+        });
+
     }
+    const listData = searchUserResult.map((v, i) => ({ 
+        uid: i,
+        title: v.nickname,
+        content: v.email
+      }));
 
     return (
         <div>
@@ -60,6 +75,20 @@ const Room = ({ height}) => {
                         ]}
                     >
                     <Input.Search placeholder="Search People" onSearch={onSearch} bordered={false}  />
+                    <List
+                    itemLayout="vertical"
+                    dataSource={listData}
+                    renderItem={item => (
+                    <List.Item
+                        key={item.title}>
+                        <List.Item.Meta
+                        avatar={<Avatar src={item.avatar} />}
+                        title={<a href={item.href}>{item.title}</a>}
+                        />
+                    {item.content}
+                    </List.Item>
+                    )}
+                    />
                     </Modal>
                 </div>
             </div>

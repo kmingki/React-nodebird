@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const TabletLayout = ({children, SideMenu, Side}) => {
     
     return(
-        <div id="tabletWrapper" style={{display:"flex", width:"700px", margin:"0 auto"}}>
+        <div style={{display:"flex", width:"700px", margin:"0 auto"}}>
             <div style={{width:"100px"}}>
             {SideMenu}
             </div>

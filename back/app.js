@@ -33,9 +33,9 @@ require('dotenv').config();
 
 app.use(cookieParser(process.env.COOKIESECRET, {
     signed: true,
-}));
+})); 
 app.use(session({
-    secret: process.env.SESSIONSECRET,
+    secret: process.env.COOKIESECRET,
     resave: false,
     saveUninitialized: false,
   }))

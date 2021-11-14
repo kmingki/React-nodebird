@@ -44,7 +44,7 @@ const DesktopLayout = ({children, Side}) => {
     );
     
     return(
-        <div id="desktopWrapper" style={{display:"flex", width:"80%", margin:"0 auto"}}>
+        <div style={{display:"flex", width:"80%", margin:"0 auto"}}>
             <div style={{display:"flex", flexFlow:"row wrap", width:"20%", alignContent: "flex-start"}}>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<HomeOutlined style={{color: "#2C2C2C"}}/>} onClick={toTop}>&nbsp;Home</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<GlobalOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Explore</Button>
