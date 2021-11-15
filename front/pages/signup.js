@@ -100,8 +100,7 @@ const Signup = () => {
                     </div>
                     <div>
                     <Input 
-                            name="user-nickname" 
-                            type="email"
+                            name="user-nickname"
                             placeholder="닉네임"
                             size="large"
                             style={{width:"300px", margin:"5px auto"}} 

@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Card } from 'antd';
+import { Avatar, Image, Button } from 'antd';
 import { END } from 'redux-saga';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -11,14 +11,14 @@ import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
 import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
-import AppLayout from '../../components/AppLayout';
+import DesktopLayout from '../../components/layout/DesktopLayout';
 
 const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo, me } = useSelector((state) => state.user);
 
   useEffect(() => {
     const onScroll = () => {
@@ -38,8 +38,12 @@ const User = () => {
     };
   }, [mainPosts.length, hasMorePosts, id, loadPostsLoading]);
 
+  const onClickEditProfile = () => {
+    console.log('done');
+  }
+
   return (
-    <AppLayout>
+    <DesktopLayout>
       {userInfo && (
         <Head>
           <title>
@@ -55,34 +59,27 @@ const User = () => {
       )}
       {userInfo
         ? (
-          <Card
-            actions={[
-              <div key="twit">
-                짹짹
-                <br />
-                {userInfo.Posts}
-              </div>,
-              <div key="following">
-                팔로잉
-                <br />
-                {userInfo.Followings}
-              </div>,
-              <div key="follower">
-                팔로워
-                <br />
-                {userInfo.Followers}
-              </div>,
-            ]}
-          >
-            <Card.Meta
-              avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
-              title={userInfo.nickname}
-            />
-          </Card>
+          <>
+          <div style={{display:"flex", alignItems:"center", justifyContent: "space-between", margin:"20px"}}>
+                <div style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
+                    <Avatar src={<Image src="https://joeschmoe.io/api/v1/random"/>} size={128}/>
+                    <div style={{display: "inline-block"}}>
+                        <h2>{userInfo.nickname}</h2>
+                        <p>{userInfo.email}</p>
+                    </div>
+                </div>
+                {me && me.id==userInfo.id ?
+                <Button shape="round" onClick={onClickEditProfile}>Edit profile</Button>:
+                null}
+            </div>
+            <div style={{display:"flex", margin:"20px"}}>
+                <p>{userInfo.Followings} Following {userInfo.Followers} Followers</p>
+            </div>
+          </>
         )
         : null}
       {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
-    </AppLayout>
+    </DesktopLayout>
   );
 };
 

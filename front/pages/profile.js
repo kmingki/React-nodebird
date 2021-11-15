@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
-import AppLayout from '../components/AppLayout';
+import DesktopLayout from '../components/layout/DesktopLayout';
 import { useRouter } from 'next/router';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 import useSWR from 'swr';
 import { useSelector, useDispatch } from 'react-redux';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-
+import { Avatar, Image, Button} from 'antd';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
 import { END } from 'redux-saga';
-import UserProfile from '../components/UserProfile';
 
 const fetcher = (url) => axios.get(url, { withCredentials: true}).then((result)=>result.data);
 
@@ -50,17 +49,34 @@ const Profile = () => {
         return <div>팔로잉/팔로워 로딩 중 에러가 발생합니다.</div>;
     }
 
+    const onClickEditProfile = () => {
+        console.log('done');
+    }
     return (
         <>
             <Head>
                 <title>{me.nickname}</title>    
             </Head>
-        <AppLayout>
-            <UserProfile />
+        <DesktopLayout>
+            <div style={{display:"flex", alignItems:"center", justifyContent: "space-between", margin:"20px"}}>
+                <div style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
+                    <Avatar src={<Image src="https://joeschmoe.io/api/v1/random"/>} size={128}/>
+                    <div style={{display: "inline-block"}}>
+                        <h2>{me.nickname}</h2>
+                        <p>{me.email}</p>
+                    </div>
+                </div>
+                <Button shape="round" onClick={onClickEditProfile}>Edit profile</Button>
+            </div>
+            <div style={{display:"flex", margin:"20px"}}>
+                <p>{followingsData? followingsData.length: 0} Following {followersData? followersData.length : 0} Followers</p>
+            </div>
+            
+
             <NicknameEditForm />
             <FollowList header="팔로잉 목록" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingsError}/>
             <FollowList header="팔로워 목록" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followersError}/>
-        </AppLayout>
+        </DesktopLayout>
         </>
     );
 }
@@ -75,6 +91,13 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
     context.store.dispatch({
         type: LOAD_MY_INFO_REQUEST,
     });
+    context.store.dispatch({
+        type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch({
+        type: LOAD_USER_POSTS_REQUEST,
+        data: context.params.id,
+      });
     
     context.store.dispatch(END); //REQUEST가 SUCCESS가 될때까지 기다려준다.
     await context.store.sagaTask.toPromise();

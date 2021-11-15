@@ -29,10 +29,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/main.js"
     ],
-    "/messages": [
+    "/user/[id]": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/messages.js"
+      "static/chunks/pages/user/[id].js"
     ]
   },
   "ampFirstPages": []

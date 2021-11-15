@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Card, Avatar, Button } from 'antd';
+import { Card, Avatar, Button, Image } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { LOG_OUT_REQUEST } from '../reducers/user';

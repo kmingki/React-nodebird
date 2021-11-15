@@ -32,8 +32,9 @@ const DesktopLayout = ({children, Side}) => {
     });
 
     const onClickProfile = useCallback(()=>{
-        return router.push('/profile');
+        return router.push(`/user/${me.id}`);
     });
+
 
     const menu = (
         <Menu>
@@ -51,6 +52,7 @@ const DesktopLayout = ({children, Side}) => {
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<MailOutlined style={{color: "#2C2C2C"}}/>} onClick={onClickMessages}>&nbsp;Messages</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<StarOutlined style={{color: "#2C2C2C"}}/>}>&nbsp;Notification</Button>
                 <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} icon={<UserOutlined style={{color: "#2C2C2C"}}/>} onClick={onClickProfile}>&nbsp;Profile</Button>
+                <Button type="text" shape="round" style={{display: "block", margin: "10px 0", height: "50px", fontSize: "20px"}} onClick={onLogOut}>&nbsp;Logout</Button>
             </div>
             <div style={{width:"50%", borderRight: "solid thin #EFEEF5", borderLeft: "solid thin #EFEEF5"}}>
             {children}
