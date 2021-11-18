@@ -1,9 +1,10 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Image, Button } from 'antd';
+import { Avatar, Image, Button, Modal, Input } from 'antd';
 import { END } from 'redux-saga';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import axios from 'axios';
@@ -19,6 +20,7 @@ const User = () => {
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
   const { userInfo, me } = useSelector((state) => state.user);
+  const [modalVisible, setmodalVisible] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -39,7 +41,14 @@ const User = () => {
   }, [mainPosts.length, hasMorePosts, id, loadPostsLoading]);
 
   const onClickEditProfile = () => {
-    console.log('done');
+    setmodalVisible(true);
+  }
+  const onClickClose = () => {
+    setmodalVisible(false);
+  }
+
+  const onClickSave = () => {
+
   }
 
   return (
@@ -75,6 +84,19 @@ const User = () => {
             <div style={{display:"flex", margin:"20px"}}>
                 <p>{userInfo.Followings} Following {userInfo.Followers} Followers</p>
             </div>
+            <Modal
+          visible={modalVisible}
+          title="Edit profile"
+          onCancel={onClickClose}
+          footer={[
+            <Button key="submit" shape="round" style= {{color: "black"}} onClick={onClickSave}>
+              Save
+            </Button>,
+          ]}
+        >
+          <Avatar src={<Image src="https://joeschmoe.io/api/v1/random"/>} size={128}/>
+          <Input placeholder="Name" />
+        </Modal>
           </>
         )
         : null}

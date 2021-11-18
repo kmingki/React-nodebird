@@ -1,0 +1,6 @@
+.userList:hover { background-color: rgb(245, 241, 241);}
+
+.error {
+    color: white;
+    background-color: red;
+  }
