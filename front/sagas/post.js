@@ -223,7 +223,7 @@ function uploadImagesAPI(data){
 
 function * uploadImages(action) {
     try{
-        const result = yield call(uploadImagesAPI, action.data); //action.data = 이미지 form data
+        const result = yield call(uploadImagesAPI, action.data);
         yield put({
             type: UPLOAD_IMAGES_SUCCESS,
             data: result.data

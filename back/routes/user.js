@@ -1,12 +1,51 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { User, Post, Comment, Image } = require('../models');
 const { Op } = require('sequelize');
-
 const router = express.Router();
 
+try {
+    fs.accessSync('profile');
+} catch (error) {
+    console.log('profile 폴더가 없으므로 생성합니다.');
+    fs.mkdirSync('profile');
+}
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) {
+            done(null, 'profile');
+        },
+        filename(req, file, done) {
+            const ext = path.extname(file.originalname);
+            const basename = path.basename(file.originalname, ext);
+            done(null, basename + '_' + req.user.id + ext);
+        },
+    }),
+    limits: { fileSize : 20 * 1024 * 1024},
+});
+
+router.post('/photo', isLoggedIn, upload.array('photo'), async(req, res, next) => {
+    //console.log(req.files);
+    res.json(req.files[0].filename);
+    //res.json(req.files[].map((v)=> v.filename));
+});
+
+router.patch('/editUserProfile', isLoggedIn, async(req, res, next) => {
+    try {
+        await User.update({nickname : req.body.nickname }, { where: { id : req.user.id }});
+
+        res.status(200).send({nickname: req.body.nickname });
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
 router.get('/loadFollowers', isLoggedIn, async (req, res, next) => {
     
     try {
@@ -157,18 +196,6 @@ router.post('/logout', isLoggedIn, (req, res) => {
     req.logout();
     req.session.destroy();
     res.send('ok');
-});
-
-router.patch('/changeNickname', isLoggedIn, async (req, res, next)=>{
-
-    try {
-        await User.update({nickname : req.body.nickname }, { where: { id : req.user.id }});
-
-        res.status(200).send({nickname: req.body.nickname });
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
 });
 
 router.patch('/unfollow/:UserId', isLoggedIn, async (req, res, next)=>{

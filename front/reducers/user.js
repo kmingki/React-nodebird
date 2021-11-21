@@ -6,6 +6,10 @@ export const initialState = {
     searchUserDone: false,
     searchUserError: null,
     searchUserResult: [],
+    uploadPhotoLoading: false, //유저 프로필사진 업로드 시도중
+    uploadPhotoDone: false,
+    uploadPhotoError: null,
+    photoPath:null,
     loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
     loadMyInfoDone: false,
     loadMyInfoError: null,
@@ -27,21 +31,25 @@ export const initialState = {
     signUpLoading: false, // 회원가입 시도중
     signUpDone: false,
     signUpError: null,
-    changeNicknameLoading: false, // 닉네임 변경 시도중
-    changeNicknameDone: false,
-    changeNicknameError: null,
-    loadFollowersLoading: false,
+    editUserProfileLoading: false, // 사용자 프로필 수정 시도중
+    editUserProfileDone: false,
+    editUserProfileError: null,
+    loadFollowersLoading: false, //팔로워 로드 시도중
     loadFollowersDone: false,
     loadFollowersError: null,
-    loadFollowingsLoading: false,
+    loadFollowingsLoading: false, //팔로잉 로드 시도중
     loadFollowingsDone: false,
     loadFollowingsError: null,
-    removeFollowersLoading: false,
+    removeFollowersLoading: false, //팔로워 차단 시도중
     removeFollowersDone: false,
     removeFollowersError: null,
     me: null,
     userInfo: null,
 };
+
+export const UPLOAD_PHOTO_REQUEST = 'UPLOAD_PHOTO_REQUEST';
+export const UPLOAD_PHOTO_SUCCESS = 'UPLOAD_PHOTO_SUCCESS';
+export const UPLOAD_PHOTO_FAILURE = 'UPLOAD_PHOTO_FAILURE';
 
 export const SEARCH_USER_REQUEST = 'SEARCH_USER_REQUEST';
 export const SEARCH_USER_SUCCESS = 'SEARCH_USER_SUCCESS';
@@ -68,9 +76,9 @@ export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 export const SIGN_UP_DONE = 'SIGN_UP_DONE';
 
-export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
-export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
-export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
+export const EDIT_USER_PROFILE_REQUEST = 'EDIT_USER_PROFILE_REQUEST';
+export const EDIT_USER_PROFILE_SUCCESS = 'EDIT_USER_PROFILE_SUCCESS';
+export const EDIT_USER_PROFILE_FAILURE = 'EDIT_USER_PROFILE_FAILURE';
 
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
@@ -97,6 +105,22 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch(action.type){
+    case UPLOAD_PHOTO_REQUEST:
+        draft.uploadPhotoLoading=true;
+        draft.uploadPhotoDone=false;
+        draft.uploadPhotoError=null;
+        break;
+    case UPLOAD_PHOTO_SUCCESS:
+        draft.photoPath=action.data;
+        draft.uploadPhotoLoading=false;
+        draft.uploadPhotoDone=true;
+        draft.uploadPhotoError=null;
+        break;
+    case UPLOAD_PHOTO_FAILURE:
+        draft.uploadPhotoLoading=false;
+        draft.uploadPhotoDone=false;
+        draft.uploadPhotoError=action.error;
+        break;
     case SEARCH_USER_REQUEST:
         draft.searchUserLoading=true;
         draft.searchUserDone=false;
@@ -262,20 +286,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case SIGN_UP_DONE:
         draft.signUpDone = false;
         break;
-    case CHANGE_NICKNAME_REQUEST:
-        draft.changeNicknameLoading = true;
-        draft.changeNicknameError = null;
-        draft.changeNicknameDone = false;
+    case EDIT_USER_PROFILE_REQUEST:
+        draft.editUserProfileLoading = true;
+        draft.editUserProfileError = null;
+        draft.editUserProfileDone = false;
         break;
-    case CHANGE_NICKNAME_SUCCESS:
+    case EDIT_USER_PROFILE_SUCCESS:
         draft.me.nickname=action.data.nickname;
-        draft.changeNicknameLoading = false;
-        draft.changeNicknameError = null;
-        draft.changeNicknameDone = true;
+        draft.editUserProfileLoading = false;
+        draft.editUserProfileError = null;
+        draft.editUserProfileDone = true;
         break;
-    case CHANGE_NICKNAME_FAILURE:
-        draft.changeNicknameLoading = false;
-        draft.changeNicknameError = action.error;
+    case EDIT_USER_PROFILE_FAILURE:
+        draft.editUserProfileLoading = false;
+        draft.editUserProfileError = action.error;
         break;
     case ADD_POST_TO_ME:
         draft.me.Posts.unshift({id: action.data});

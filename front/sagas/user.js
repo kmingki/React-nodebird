@@ -5,6 +5,9 @@ import {
     SEARCH_USER_REQUEST,
     SEARCH_USER_SUCCESS,
     SEARCH_USER_FAILURE,
+    UPLOAD_PHOTO_REQUEST,
+    UPLOAD_PHOTO_SUCCESS,
+    UPLOAD_PHOTO_FAILURE,
     LOAD_MY_INFO_REQUEST,
     LOAD_MY_INFO_SUCCESS,
     LOAD_MY_INFO_FAILURE,
@@ -35,10 +38,30 @@ import {
     REMOVE_FOLLOWERS_REQUEST,
     REMOVE_FOLLOWERS_SUCCESS,
     REMOVE_FOLLOWERS_FAILURE,
-    CHANGE_NICKNAME_REQUEST,
-    CHANGE_NICKNAME_SUCCESS,
-    CHANGE_NICKNAME_FAILURE,
+    EDIT_USER_PROFILE_REQUEST,
+    EDIT_USER_PROFILE_SUCCESS,
+    EDIT_USER_PROFILE_FAILURE,
   } from '../reducers/user';
+
+function uploadPhotoAPI(data){
+    return axios.post('/user/photo', data); //form data는 그대로 전송해야함
+}
+
+function * uploadPhoto(action) {
+    try{
+        const result = yield call(uploadPhotoAPI, action.data);
+        yield put({
+            type: UPLOAD_PHOTO_SUCCESS,
+            data: result.data
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: UPLOAD_PHOTO_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
 
 function searchUserAPI(data) {
     return axios.get(`/user/search/${data}`);
@@ -248,13 +271,13 @@ function * loadFollowings(action){
     }
  }
 
-function changeNicknameAPI(data) {
-    return axios.patch('/user/changeNickname', { nickname: data});
+function editUserProfileAPI(data) {
+    return axios.patch('/user/editUserProfile', data);
 }
 
-function * changeNickname(action) { 
+function * editUserProfile(action) { 
     try {
-        const result = yield call(changeNicknameAPI, action.data); // result.data.nickname
+        const result = yield call(editUserProfileAPI, action.data); // result.data.nickname
         yield put({
             type: CHANGE_NICKNAME_SUCCESS,
             data: result.data
@@ -288,12 +311,15 @@ function * removeFollower(action) {
     }
 }
 
+function * watchUploadPhoto() {
+    yield takeLatest(UPLOAD_PHOTO_REQUEST, uploadPhoto);
+}
 function * watchSearchUser() {
     yield takeLatest(SEARCH_USER_REQUEST, searchUser);
 }
 
-function * watchChangeNickname() {
-    yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+function * watchEditUserProfile() {
+    yield takeLatest(EDIT_USER_PROFILE_REQUEST, editUserProfile);
 }
 
 function * watchLoadMyInfo() {
@@ -338,11 +364,12 @@ function * watchRemoveFollower() {
 
 export default function * userSaga(){
     yield all([
+        fork(watchUploadPhoto),
         fork(watchSearchUser),
         fork(watchRemoveFollower),
         fork(watchLoadFollowers),
         fork(watchLoadFollowings),
-        fork(watchChangeNickname),
+        fork(watchEditUserProfile),
         fork(watchLoadMyInfo),
         fork(watchLoadUser),
         fork(watchFollow),

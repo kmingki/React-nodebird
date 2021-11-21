@@ -27,6 +27,7 @@ app.use(cors({
     credentials: true,
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads')));
+app.use('/profile', express.static(path.join(__dirname, 'profile')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 require('dotenv').config();

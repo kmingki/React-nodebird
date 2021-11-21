@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Form, Input, Button, Card, Avatar, Upload } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { CameraOutlined, EnvironmentOutlined, PlusOutlined } from '@ant-design/icons';
+import { CameraOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
 
 function getBase64(file) {
@@ -28,7 +28,7 @@ const PostForm = () => {
   const fileList = imagePaths.map((v, i) => ({ 
     uid: i,
     name: v,
-    url: `http://localhost:3065/${v}`
+    url: `http://localhost:3065/${v}`//imagePaths
   }));
 
   const handlePreview = async file => {

@@ -1,7 +1,8 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Image, Button, Modal, Input } from 'antd';
+import { Avatar, Image, Button, Modal, Input, Badge, Form } from 'antd';
+import { PlusCircleFilled } from '@ant-design/icons';
 import { END } from 'redux-saga';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -9,18 +10,20 @@ import { useRouter } from 'next/router';
 
 import axios from 'axios';
 import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
-import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
+import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST, UPLOAD_PHOTO_REQUEST, EDIT_USER_PROFILE_REQUEST } from '../../reducers/user';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
 import DesktopLayout from '../../components/layout/DesktopLayout';
 
 const User = () => {
+  const imageInput = useRef();
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { userInfo, me } = useSelector((state) => state.user);
+  const { userInfo, me, photoPath } = useSelector((state) => state.user);
   const [modalVisible, setmodalVisible] = useState(false);
+  const [ nickname, setNickname ] = useState('');
 
   useEffect(() => {
     const onScroll = () => {
@@ -40,6 +43,10 @@ const User = () => {
     };
   }, [mainPosts.length, hasMorePosts, id, loadPostsLoading]);
 
+  const onChangeNickname = useCallback((e) => {
+    setNickname(e.target.value);
+  }, []);
+
   const onClickEditProfile = () => {
     setmodalVisible(true);
   }
@@ -47,9 +54,36 @@ const User = () => {
     setmodalVisible(false);
   }
 
-  const onClickSave = () => {
+  const onClickEditProfilePhoto = useCallback(() => {
+    imageInput.current.click();
+  }, [imageInput.current]);
 
-  }
+  const onChangePhoto = useCallback((e) => {
+    console.log('images', e.target.files);
+    const imageFormData = new FormData();
+    imageFormData.append('photo', e.target.files[0]);
+    dispatch({
+      type: UPLOAD_PHOTO_REQUEST,
+      data: imageFormData,
+    });
+  }, []);
+
+  const onClickSave  = useCallback(() => {
+    if (!nickname || !nickname.trim()) {
+      return alert('게시글을 작성하세요.');
+    }
+
+    const formData = new FormData();
+    imagePaths.forEach((p) => {
+      formData.append('image', p);//req.body.image
+    });
+    formData.append('content', nickname);//req.body.content
+
+    dispatch({
+      type: EDIT_USER_PROFILE_REQUEST,
+      data: formData,
+    });
+  }, [nickname]);
 
   return (
     <DesktopLayout>
@@ -88,14 +122,20 @@ const User = () => {
           visible={modalVisible}
           title="Edit profile"
           onCancel={onClickClose}
-          footer={[
-            <Button key="submit" shape="round" style= {{color: "black"}} onClick={onClickSave}>
-              Save
-            </Button>,
-          ]}
+          footer={null}
         >
-          <Avatar src={<Image src="https://joeschmoe.io/api/v1/random"/>} size={128}/>
-          <Input placeholder="Name" />
+        <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onClickSave}>
+          <div onClick={onClickEditProfilePhoto} style={{cursor:"pointer"}}>
+          <input type="file" name="photo" hidden ref={imageInput} onChange={onChangePhoto} />
+          <Badge count={<PlusCircleFilled style={{ color: 'red' }} style={{fontSize:"25px"}}/>}  offset={[-10, 110]}>
+          <Avatar src={`http://localhost:3065/profile/${photoPath}`} size={128}/>
+          </Badge>
+          </div>
+          <Input placeholder="Nickname" style={{marginTop: "20px"}} value={nickname} onChange={onChangeNickname}/>
+          <Button shape="round" htmlType="submit" style={{marginTop: "20px"}}>업로드</Button>
+        </Form>
+
+          
         </Modal>
           </>
         )

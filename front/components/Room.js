@@ -33,6 +33,7 @@ const Room = ({ height }) => {
     const onClickUser = (e) => {
 
         groupChatPeople.push(e);
+        //searchUserResult 중에서 e는 표시해야된다.
 
 
     } 
