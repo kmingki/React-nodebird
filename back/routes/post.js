@@ -48,7 +48,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next)=>{
 
             await post.addHashtags(result.map(v => v[0]));
         }
-        if (req.body.image){
+        if (req.body.image) {
             if (Array.isArray(req.body.image)) { //이미지를 여러 개 올리면 image : [제로초.png, 부기초.png]
                 const images = await Promise.all(req.body.image.map((image)=> Image.create({ src : image, PostId: post.id })));
             } else { //이미지를 하나만 올리면 image: 제로초.png

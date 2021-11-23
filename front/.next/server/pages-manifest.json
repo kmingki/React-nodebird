@@ -3,6 +3,7 @@
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
   "/user/[id]": "pages/user/[id].js",
-  "/main": "pages/main.js",
-  "/": "pages/index.js"
+  "/": "pages/index.js",
+  "/messages": "pages/messages.js",
+  "/next/dist/pages/_error": "pages/next/dist/pages/_error.js"
 }

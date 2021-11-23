@@ -36,11 +36,21 @@ router.post('/photo', isLoggedIn, upload.array('photo'), async(req, res, next) =
     //res.json(req.files[].map((v)=> v.filename));
 });
 
-router.patch('/editUserProfile', isLoggedIn, async(req, res, next) => {
+router.patch('/editUserProfile', isLoggedIn, upload.none(), async (req, res, next) => {
     try {
-        await User.update({nickname : req.body.nickname }, { where: { id : req.user.id }});
+        //console.log(req.body.content);
+        //console.log(req.body.photo);
+        await User.update({ nickname : req.body.content }, { where: { id : req.user.id }});
 
-        res.status(200).send({nickname: req.body.nickname });
+        if (req.body.photo){
+            await User.update({ photo: req.body.photo }, { where: { id : req.user.id }});
+        }
+        const userInfo = {
+            nickname: req.body.content,
+            photo : req.body.photo,
+        }
+        return res.status(200).json(userInfo);
+
     } catch (err) {
         console.error(err);
         next(err);
@@ -293,7 +303,7 @@ router.get('/:userId/posts', async(req, res, next)=>{
                 }]
             }]
         });
-        console.log(posts);
+        //console.log(posts);
         return res.status(200).send(posts);
     } catch (err) {
         console.error(err);

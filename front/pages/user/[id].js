@@ -21,7 +21,7 @@ const User = () => {
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { userInfo, me, photoPath } = useSelector((state) => state.user);
+  const { userInfo, me, photoPath, editUserProfileDone } = useSelector((state) => state.user);
   const [modalVisible, setmodalVisible] = useState(false);
   const [ nickname, setNickname ] = useState('');
 
@@ -59,7 +59,7 @@ const User = () => {
   }, [imageInput.current]);
 
   const onChangePhoto = useCallback((e) => {
-    console.log('images', e.target.files);
+    //console.log('images', e.target.files);
     const imageFormData = new FormData();
     imageFormData.append('photo', e.target.files[0]);
     dispatch({
@@ -70,20 +70,25 @@ const User = () => {
 
   const onClickSave  = useCallback(() => {
     if (!nickname || !nickname.trim()) {
-      return alert('게시글을 작성하세요.');
+      return alert('닉네임을 작성하세요.');
     }
-
     const formData = new FormData();
-    imagePaths.forEach((p) => {
-      formData.append('image', p);//req.body.image
-    });
+    formData.append('photo', photoPath);
     formData.append('content', nickname);//req.body.content
 
     dispatch({
       type: EDIT_USER_PROFILE_REQUEST,
       data: formData,
     });
-  }, [nickname]);
+  }, [nickname, photoPath]);
+
+  /*
+  useEffect(()=>{
+    if(editUserProfileDone){
+
+    }
+  });
+  */
 
   return (
     <DesktopLayout>
@@ -105,7 +110,7 @@ const User = () => {
           <>
           <div style={{display:"flex", alignItems:"center", justifyContent: "space-between", margin:"20px"}}>
                 <div style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
-                    <Avatar src={<Image src="https://joeschmoe.io/api/v1/random"/>} size={128}/>
+                    <Avatar src={`http://localhost:3065/profile/${userInfo.photo}`} size={128}/>
                     <div style={{display: "inline-block"}}>
                         <h2>{userInfo.nickname}</h2>
                         <p>{userInfo.email}</p>

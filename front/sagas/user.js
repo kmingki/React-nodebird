@@ -277,15 +277,16 @@ function editUserProfileAPI(data) {
 
 function * editUserProfile(action) { 
     try {
-        const result = yield call(editUserProfileAPI, action.data); // result.data.nickname
+        const result = yield call(editUserProfileAPI, action.data); 
+        console.log(result.data);
         yield put({
-            type: CHANGE_NICKNAME_SUCCESS,
+            type: EDIT_USER_PROFILE_SUCCESS,
             data: result.data
         });
     } catch (err) {
         console.error(err);
         yield put({
-            type: CHANGE_NICKNAME_FAILURE,
+            type: EDIT_USER_PROFILE_FAILURE,
             error: err.response.data
         });
     }

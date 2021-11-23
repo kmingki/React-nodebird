@@ -293,6 +293,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         break;
     case EDIT_USER_PROFILE_SUCCESS:
         draft.me.nickname=action.data.nickname;
+        draft.me.photo=action.data.photo;
         draft.editUserProfileLoading = false;
         draft.editUserProfileError = null;
         draft.editUserProfileDone = true;
