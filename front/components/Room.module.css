@@ -1,4 +1,10 @@
-.userList:hover { background-color: rgb(245, 241, 241);}
+.userList:hover { 
+  background-color: rgb(245, 241, 241);
+}
+.userList {
+  padding-left: 5%;
+  padding-right: 5%;
+}
 
 .error {
     color: white;

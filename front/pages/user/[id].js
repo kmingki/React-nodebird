@@ -22,7 +22,7 @@ const User = () => {
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
   const { userInfo, me, photoPath, editUserProfileDone } = useSelector((state) => state.user);
-  const [modalVisible, setmodalVisible] = useState(false);
+  const [ modalVisible, setmodalVisible ] = useState(false);
   const [ nickname, setNickname ] = useState('');
 
   useEffect(() => {
@@ -42,6 +42,12 @@ const User = () => {
       window.removeEventListener('scroll', onScroll);
     };
   }, [mainPosts.length, hasMorePosts, id, loadPostsLoading]);
+
+  useEffect(() => {
+    if (editUserProfileDone) {
+      setmodalVisible(false);
+    }
+  }, [editUserProfileDone]);
 
   const onChangeNickname = useCallback((e) => {
     setNickname(e.target.value);
@@ -82,14 +88,6 @@ const User = () => {
     });
   }, [nickname, photoPath]);
 
-  /*
-  useEffect(()=>{
-    if(editUserProfileDone){
-
-    }
-  });
-  */
-
   return (
     <DesktopLayout>
       {userInfo && (
@@ -111,7 +109,7 @@ const User = () => {
           <div style={{display:"flex", alignItems:"center", justifyContent: "space-between", margin:"20px"}}>
                 <div style={{display: "flex", alignItems:"center", justifyContent: "center"}}>
                     <Avatar src={`http://localhost:3065/profile/${userInfo.photo}`} size={128}/>
-                    <div style={{display: "inline-block"}}>
+                    <div style={{display: "inline-block", marginLeft: "20px"}}>
                         <h2>{userInfo.nickname}</h2>
                         <p>{userInfo.email}</p>
                     </div>
@@ -121,7 +119,7 @@ const User = () => {
                 null}
             </div>
             <div style={{display:"flex", margin:"20px"}}>
-                <p>{userInfo.Followings} Following {userInfo.Followers} Followers</p>
+                <p><b>{userInfo.Followings}</b> Following <b>{userInfo.Followers}</b> Followers</p>
             </div>
             <Modal
           visible={modalVisible}
