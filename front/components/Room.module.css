@@ -4,6 +4,9 @@
 .userList {
   padding-left: 5%;
   padding-right: 5%;
+  height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .error {

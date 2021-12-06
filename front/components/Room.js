@@ -5,12 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SEARCH_USER_REQUEST } from '../reducers/user';
 import styles from './Room.module.css'
 
+import CheckBox from './CheckBox';
 const Room = ({ height }) => {
     //서버사이드렌더링 - pre rendering 해야할 필요가 있을까?
     const dispatch = useDispatch();
     const { searchUserResult } = useSelector((state) => state.user);
     const [ visible, onChangeVisible ] = useState(false);
-    const [ groupChat, onChangeGroupChat ] = useState([]);
+    const [ groupChat, setGroupChat ] = useState({});
 
     const listData = searchUserResult.map((v, i) => ({ 
         idx: i,
@@ -47,14 +48,20 @@ const Room = ({ height }) => {
             }
         }
 
-        onChangeGroupChat(groupChat => [...groupChat, e]);
+        setGroupChat(groupChat => groupChat.concat(e));
+        //setGroupChat(groupChat => [...groupChat, e]);
     } 
 
     const onClose = (e) => {
-        console.log(e.uid);
-        groupChat.forEach((p)=>console.log(p));
-        onChangeGroupChat(groupChat => groupChat.filter(p => (p.uid !== e.uid)));
-        console.log(groupChat);
+        setGroupChat(groupChat => groupChat.filter(p => (p.uid !== e.uid)));
+    }
+
+    const handleChange = ({ target: { label, checked }}) => {
+        setGroupChat({ ...groupChat, [label]: checked })
+    }
+
+    const handleSubmit = () => {
+
     }
 
     return (
@@ -86,28 +93,21 @@ const Room = ({ height }) => {
                         ]}
                     >
                     <Input.Search placeholder="Search People" onSearch={onSearch} bordered={false}  />
-                    {groupChat.map((p)=>(<Tag
-                    color="#2db7f5"
-                    closable onClose={()=>{onClose(p)}}>
-                        {p.avatar? <Avatar src={`http://localhost:3065/profile/${p.avatar}`} />: <Avatar>{p.title[0]}</Avatar>}
-                        &nbsp;{p.title}</Tag>))}
-                    <List
-                    itemLayout="vertical"
-                    dataSource={listData}
-                    renderItem={item => (
-                    <div className={styles.userList} onClick={()=>{ onClickUser(item); }}>
-                    <List.Item
-                        key={item.title}
-                        >
-                        <List.Item.Meta
-                        avatar={item.avatar? <Avatar src={`http://localhost:3065/profile/${item.avatar}`} /> : <Avatar>{item.title[0]}</Avatar>}
-                        title={<a href={item.href}>{item.title}</a>}
+
+                    <form onSubmit={handleSubmit}>
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                    {searchUserResult.map(user => (
+                        <div className={styles.userList}>
+                        <CheckBox 
+                        user={user}
+                        handleChange={handleChange}
+                        label={user.id}
+                        value={groupChat[user.id]}
                         />
-                    {item.content}
-                    </List.Item>
+                        </div>))}
                     </div>
-                    )}
-                    />
+                    </form>
+
                     </Modal>
                 </div>
             </div>
