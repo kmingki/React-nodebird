@@ -30,7 +30,7 @@ const Room = ({ height }) => {
     }
 
     const handleOk = () => {
-        console.log('ok');
+        console.log(groupChat);
     }
 
     const onSearch = (e) => {
@@ -39,29 +39,8 @@ const Room = ({ height }) => {
             data: e
         });
     }
-
-    const onClickUser = (e) => {
-        
-        for (var i = 0; i < groupChat.length; i++) {
-            if (groupChat[i].uid === e.uid){
-                return
-            }
-        }
-
-        setGroupChat(groupChat => groupChat.concat(e));
-        //setGroupChat(groupChat => [...groupChat, e]);
-    } 
-
-    const onClose = (e) => {
-        setGroupChat(groupChat => groupChat.filter(p => (p.uid !== e.uid)));
-    }
-
     const handleChange = ({ target: { label, checked }}) => {
         setGroupChat({ ...groupChat, [label]: checked })
-    }
-
-    const handleSubmit = () => {
-
     }
 
     return (
@@ -94,7 +73,7 @@ const Room = ({ height }) => {
                     >
                     <Input.Search placeholder="Search People" onSearch={onSearch} bordered={false}  />
 
-                    <form onSubmit={handleSubmit}>
+                
                     <div style={{display:"flex", flexDirection:"column"}}>
                     {searchUserResult.map(user => (
                         <div className={styles.userList}>
@@ -106,7 +85,6 @@ const Room = ({ height }) => {
                         />
                         </div>))}
                     </div>
-                    </form>
 
                     </Modal>
                 </div>

@@ -39,5 +39,6 @@ React로 개발한 SNS 서비스
 ![Chatter - Chrome 2021-11-07 오후 12_59_55](https://user-images.githubusercontent.com/63445553/140631953-98dd803b-805c-4952-8629-058a0faab1c9.png)
 
 ### 채팅서비스
-
+## 채팅방 초대
+![채팅방 초대](https://user-images.githubusercontent.com/63445553/145391618-2f5ec4dd-89a4-418f-bf1f-87d42c0a8de9.PNG)
 ### PROFILE PAGE
