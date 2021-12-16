@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs');
 const { Post, Comment, Image, Hashtag, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
-const { restore } = require('../models/comment');
 
 const upload = multer({
     storage: multer.diskStorage({

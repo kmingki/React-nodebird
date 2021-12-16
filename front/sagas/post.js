@@ -1,6 +1,5 @@
-//put() redux store에 dispatch하는 역할
+//import shortId from 'shortid';
 import axios from 'axios';
-import shortId from 'shortid';
 import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 
 import {
@@ -49,7 +48,7 @@ function * retweet(action) {
 
     try{
         const result = yield call(retweetAPI, action.data);
-        yield put({
+        yield put({ //put(): redux store에 dispatch하는 역할
             type: RETWEET_SUCCESS,
             data: result.data
         });

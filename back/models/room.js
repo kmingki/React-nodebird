@@ -32,7 +32,7 @@ class Room extends Sequelize.Model {
 
   static associate(db){
     db.Room.hasMany(db.Chat);
-    db.Room.belongsTo(db.User);
+    db.Room.belongsTo(db.User); //UserId
     db.Room.belongsToMany(db.User, { through: 'participate', as: 'participants'});
   }
 }

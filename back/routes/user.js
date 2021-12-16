@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { User, Post, Comment, Image } = require('../models');
+const { User, Post, Comment, Image, Room } = require('../models');
 const { Op } = require('sequelize');
 const router = express.Router();
 
@@ -106,6 +106,13 @@ router.get('/', async (req, res, next) => {
                     model: User,
                     as: 'Followings',
                     attributes: ['id']
+                },{
+                    model: Room,
+                    as: 'participateRoom',
+                    include : [{
+                        model: User,
+                        as: 'participants',
+                    }]
                 }
             ]
             });
@@ -139,8 +146,6 @@ router.post('/', async (req, res, next) => {
             nickname: req.body.nickname,
             password: hashedPassword,
         });
-
-        console.log(user);
 
         res.status(201).send('ok');
 

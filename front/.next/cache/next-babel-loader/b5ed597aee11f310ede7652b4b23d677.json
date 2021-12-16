@@ -1,0 +1,1 @@
+{"ast":null,"code":"import produce from \"immer\";","map":{"version":3,"sources":["C:/Users/User/Desktop/chatter/chatter/front/reducers/chat.js"],"names":["produce"],"mappings":"AAAA,OAAOA,OAAP,MAAoB,OAApB","sourcesContent":["import produce from \"immer\";"]},"metadata":{},"sourceType":"module"}

@@ -3,7 +3,7 @@ import { Checkbox, Avatar } from 'antd';
 
 const CheckBox = ({ user, handleChange, label, value }) => {
 
-    console.log(user);
+    //console.log(user);
 
     return (
         <>

@@ -1,7 +1,14 @@
 const SocketIO = require('socket.io');
 
 module.exports = (server, app) => {
-    const io = SocketIO(server, { path: '/socket.io'});
+    const io = SocketIO(server, { 
+        path: '/socket.io',
+        cors: {
+            origin: "http://localhost:3000",
+            methods: ["GET", "POST"],
+            credentials: true
+        }
+    });
     app.set('io', io);
     const room = io.of('./room');
     const chat = io.of('./chat');

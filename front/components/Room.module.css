@@ -9,6 +9,15 @@
   align-items: center;
 }
 
+.roomList:hover {
+  background-color: rgb(245, 241, 241);
+}
+
+.roomList {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
 .error {
     color: white;
     background-color: red;

@@ -9,6 +9,7 @@ const postsRouter=require('./routes/posts');
 const userRouter=require('./routes/user');
 const postRouter=require('./routes/post');
 const hashtagRouter=require('./routes/hashtag');
+const roomRouter=require('./routes/room');
 const db=require('./models');
 const passportConfig = require('./passport');
 const webSocket = require('./socket');
@@ -51,11 +52,15 @@ app.get('/', (req, res)=>{
     res.send('hello express');
 });
 
+app.use('/room', roomRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/hashtag', hashtagRouter);
 
-app.listen(3065, ()=>{
+
+const server = app.listen(3065, ()=>{
     console.log("서버 실행 중!");
 });
+
+webSocket(server, app);
