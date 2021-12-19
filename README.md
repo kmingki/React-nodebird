@@ -19,6 +19,10 @@ React로 개발한 SNS 서비스
 ### 가입하기
 ![Chatter 가입하기](https://user-images.githubusercontent.com/63445553/139591742-64928012-d831-46be-9731-53691fa7097d.png)
 
+### 채팅서비스
+#### 채팅방 초대
+![채팅방 초대](https://user-images.githubusercontent.com/63445553/145391618-2f5ec4dd-89a4-418f-bf1f-87d42c0a8de9.PNG)
+
 ### 게시글 작성
 ![Chatter 게시글 작성 (1)](https://user-images.githubusercontent.com/63445553/140090059-5bf878bf-97cc-4860-81da-cb9cf6b7837f.gif)
 
@@ -37,11 +41,7 @@ React로 개발한 SNS 서비스
 ### 기기별 반응형 화면 (React-responsive사용)
 #### 스마트폰 화면
 ![Chatter - Chrome 2021-11-07 오후 12_58_21](https://user-images.githubusercontent.com/63445553/140631944-2c0622bd-48a2-4323-9922-f596af0e3432.png)
-####태블릿 화면
+#### 태블릿 화면
 ![Chatter - Chrome 2021-11-07 오후 12_59_55](https://user-images.githubusercontent.com/63445553/140631953-98dd803b-805c-4952-8629-058a0faab1c9.png)
-
-### 채팅서비스
-#### 채팅방 초대
-![채팅방 초대](https://user-images.githubusercontent.com/63445553/145391618-2f5ec4dd-89a4-418f-bf1f-87d42c0a8de9.PNG)
 
 ### PROFILE PAGE
