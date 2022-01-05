@@ -14,7 +14,7 @@ const Menu = () => {
         return router.push('/search');
     }, []);
     const onClickMessages = useCallback(()=>{
-        return router.push('/messages');
+        return router.push('/message/main');
     }, []);
     const onClickNotification = useCallback(()=>{
         return router.push('/notification');

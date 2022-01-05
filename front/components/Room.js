@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, List, Avatar, Modal, Input, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { SEARCH_USER_REQUEST } from '../reducers/user';
-import { CREATE_CHAT_REQUEST } from '../reducers/chat';
+import { SEARCH_USER_REQUEST, LOAD_MY_INFO_REQUEST} from '../reducers/user';
 import styles from './Room.module.css'
 
 import CheckBox from './CheckBox';
 
-const Room = ({ height, socket, setRoom }) => {
+import { socket } from '../utils/io';
+import {UPDATE_ROOM_LIST} from '../reducers/chat';
+//import { useWantingRoom } from '../hooks/chatHooks';
+
+const Room = ({ height }) => {
     //서버사이드렌더링 - pre rendering 해야할 필요가 있을까?
     const dispatch = useDispatch();
+    const router = useRouter();
     const { searchUserResult, me } = useSelector((state) => state.user);
+    const { rooms } = useSelector((state)=>state.chat);
     const [ visible, onChangeVisible ] = useState(false);
     const [ groupChat, setGroupChat ] = useState({});
-    const [ RoomList, setRoomList ] = useState(me.participateRoom);
 
-    useEffect(()=>{
-        socket.on('newRoom', (data)=>{
-            setRoomList([...RoomList, data])
-            //console.log(data);
-      });
-    }, []);
+    
 
     const showModal = () => {
         onChangeVisible(true);
@@ -39,11 +39,18 @@ const Room = ({ height, socket, setRoom }) => {
                 users.push(v[0]);
             }
         });
+        users.push(me.id.toString());
 
+        socket.emit('createRoomRequest', me.id, users);
+        console.log('create room request');
+        onChangeVisible(false);
+        setGroupChat({});
+        /*
         dispatch({
             type: CREATE_CHAT_REQUEST,
             data: { "users": users }
         });
+        */
     }
 
     const onSearch = (e) => {
@@ -56,9 +63,9 @@ const Room = ({ height, socket, setRoom }) => {
         setGroupChat({ ...groupChat, [label]: checked })
     }
 
-    //채팅방 클릭했을때 채팅방 보이기
+    //채팅방 클릭했을때 채팅방 load
     const onClickRoom = (room) => {
-        setRoom(room);
+        return router.push(`/message/${room.id}`);
     }
 
     return (
@@ -112,7 +119,7 @@ const Room = ({ height, socket, setRoom }) => {
         <div id="scrollableDiv" style={{height: height-50 , overflow: 'auto'}}>
         <List
         itemLayout="vertical"
-        dataSource={RoomList}
+        dataSource={rooms}
         renderItem={item => (
         <div className={styles.roomList} onClick={()=>onClickRoom(item)}>
         <List.Item

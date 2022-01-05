@@ -31,7 +31,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         await Promise.all(users.map(u=> newRoom.addParticipants(u.id)));
 
         const io = req.app.get('io');
-        io.of('/room').emit('newRoom', newRoom);
+        io.of('/room').emit('newRoom', newRoom); //틀렸음... 초대된 사람만 newRoom
 
         return res.status(201).send(null);
         /*
@@ -45,5 +45,25 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+router.get('/:roomId', isLoggedIn, async (req, res, next) => {
+
+    try {
+        const room = await Room.findOne({
+            where:{
+                id: req.params.roomId
+            },
+            include : [{
+                model: User,
+                as: 'participants',
+            }]
+        });
+
+        res.status(200).send(room);
+    } catch (error) {
+        console.error(error);
+        next(err);
+    }
+})
 
 module.exports = router;

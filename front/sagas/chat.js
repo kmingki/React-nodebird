@@ -2,39 +2,37 @@ import axios from 'axios';
 import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 
 import {
-    CREATE_CHAT_REQUEST,
-    CREATE_CHAT_SUCCESS,
-    CREATE_CHAT_FAILURE,
+    LOAD_ROOM_REQUEST,
+    LOAD_ROOM_SUCCESS,
+    LOAD_ROOM_FAILURE,
 } from '../reducers/chat';
 
-
-function createChatAPI(data) {
-    return axios.post('/room', data); 
+function loadRoomAPI(data) {
+    return axios.get(`/room/${data}`);
 }
 
-function * createChat(action) {
+function * loadRoom(action) {
     try{
-        const result = yield call(createChatAPI, action.data);
+        const result = yield call(loadRoomAPI, action.data);
         yield put({
-            type: CREATE_CHAT_SUCCESS,
+            type: LOAD_ROOM_SUCCESS,
             data: result.data
         });
     } catch (err) {
         console.error(err);
         yield put({
-            type: CREATE_CHAT_FAILURE,
-            error: err.response.data,
+            type: LOAD_ROOM_FAILURE,
+            error: err.response.data
         });
     }
 }
 
-
-function * watchCreateChat() {
-    yield takeLatest(CREATE_CHAT_REQUEST, createChat);
+function * watchLoadRoom() {
+    yield takeLatest(LOAD_ROOM_REQUEST, loadRoom);
 }
 
 export default function * chatSaga() {
     yield all([
-        fork(watchCreateChat),
+        fork(watchLoadRoom)
     ]);
 }

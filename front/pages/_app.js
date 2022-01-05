@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import 'antd/dist/antd.css';
 import '../css/main.css';
 import wrapper from '../store/configureStore.js';
+import { io } from "socket.io-client";
 
 //pages의 공통부분
 const NodeBird = ({ Component }) => {

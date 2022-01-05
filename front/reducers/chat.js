@@ -1,34 +1,47 @@
 import produce from "immer";
 
 export const initialState = {
-    createChatLoading: false,
-    createChatDone: false,
-    createChatError: null,
+    loadRoomLoading: false,
+    loadRoomDone: false,
+    loadRoomError: null,
+    rooms: []
 };
 
-
-export const CREATE_CHAT_REQUEST = 'CREATE_CHAT_REQUEST';
-export const CREATE_CHAT_SUCCESS = 'CREATE_CHAT_SUCCESS';
-export const CREATE_CHAT_FAILURE = 'CREATE_CHAT_FAILURE';
+export const UPDATE_ROOM_LIST = 'UPDATE_ROOM_LIST';
+export const LOAD_ROOM_LIST = 'LOAD_ROOM_LIST';
+export const LOAD_ROOM_REQUEST = 'LOAD_ROOM_REQUEST';
+export const LOAD_ROOM_SUCCESS = 'LOAD_ROOM_SUCCESS';
+export const LOAD_ROOM_FAILURE = 'LOAD_ROOM_FAILURE';
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
     switch (action.type) {
-        case CREATE_CHAT_REQUEST: {
-            draft.createChatLoading=true;
-            draft.createChatDone=false;
-            draft.createChatError=null;
+        case UPDATE_ROOM_LIST: {
+            //draft.mainPosts = draft.mainPosts.concat(action.data);
+            //draft.me.Followings.push({ id : action.data.UserId});
+            draft.rooms.push(action.data);
             break;
         }
-        case CREATE_CHAT_SUCCESS: {
-            draft.createChatLoading=false;
-            draft.createChatDone=true;
-            draft.createChatError=null;
+        case LOAD_ROOM_LIST: {
+            draft.rooms = action.data;
             break;
         }
-        case CREATE_CHAT_FAILURE: {
-            draft.createChatLoading=false;
-            draft.createChatDone=false;
-            draft.createChatError=action.error;
+        case LOAD_ROOM_REQUEST: {
+            draft.loadRoomLoading=true;
+            draft.loadRoomDone=false;
+            draft.loadRoomError=null;
+            break;
+        }
+        case LOAD_ROOM_SUCCESS: {
+            draft.rooms=action.data;
+            draft.loadRoomLoading=false;
+            draft.loadRoomDone=true;
+            draft.loadRoomError=null;
+            break;
+        }
+        case LOAD_ROOM_FAILURE: {
+            draft.loadRoomLoading=false;
+            draft.loadRoomDone=false;
+            draft.loadRoomError=action.error;
             break;
         }
     }

@@ -1,25 +1,140 @@
 const SocketIO = require('socket.io');
+const { Room, User } = require('./models');
 
 module.exports = (server, app) => {
     const io = SocketIO(server, { 
         path: '/socket.io',
         cors: {
             origin: "http://localhost:3000",
-            methods: ["GET", "POST"],
+            methods: ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"], //GET,HEAD,PUT,PATCH,POST,DELETE
             credentials: true
         }
     });
     app.set('io', io);
-    const room = io.of('./room');
-    const chat = io.of('./chat');
 
-    room.on('connection', (socket)=>{
-        console.log('room 네임스페이스에 접속');
+    io.on('connection', (socket)=>{
+        socket.on('joinRoom', async (id) => {
+
+            const user = await User.findOne({
+                where: { id: id }
+            });
+
+            const rooms = await user.getParticipateRoom();
+            
+            rooms.forEach((r)=>{
+                socket.join(parseInt(r.id, 10));
+            });
+
+            socket.join('main');
+        });
+
         socket.on('disconnect', (socket) => {
-            console.log('room 네임스페이스 접속 해제');
+            console.log('접속 해제');
+        });
+
+        socket.on('roomListDataRequest', async (userId, ack) => {
+            try{
+                const user = await User.findOne({
+                    where: { id: userId }
+                });
+    
+                //await post.addLikers(req.user.id);//객체 or id
+                const rooms = await user.getParticipateRoom({
+                    include: [{
+                        model: User,
+                        attributes: [ 'id', 'nickname']
+                    }],
+                });
+
+                ack({
+                    status:"OK",
+                    rooms
+                });
+            } catch (e) {
+                ack({
+                    status:"NOK",
+                    data: e
+                });
+                //you must catch any error that could be thrown in a listener.
+                /*callback({
+                    status: "NOK"
+                });*/
+            }
+            
+        });
+
+        socket.on('createRoomRequest', async (userId, userIds)=>{
+            const users = await Promise.all(userIds.map((u) => User.findOne({
+                where: {
+                    id: u
+                }
+            })));
+
+            //이름만 있는 배열로 생성. 단체 톡방의 default 제목이 될것임.
+            var userName = users.map(u => {
+                return u.nickname;
+            });
+
+            //배열.join(', ') '이름, 이름, 이름, 이름'
+            userName = userName.join(', ');
+
+            //새로운 채팅방 생성
+            const newRoom = await Room.create({
+                title: userName,
+                UserId: userId,
+            });
+
+            //users에 있는 유저들을 room에 add 시켜야
+            await Promise.all(users.map(u=> newRoom.addParticipants(u.id)));
+
+            const newRoomWithFullData = await Room.findOne({
+                where: { id: newRoom.id },
+                include: [{
+                    model: User,
+                    as: 'participants',
+                    attributes: [ 'id', 'nickname']
+                }],
+            });
+
+            //console.log(newRoomWithFullData);
+
+            io.emit('updateRoomList', newRoomWithFullData); //초대된 사람만?
+
         });
     });
 
+    /*
+    var users = req.body.users;
+        users.push(req.user.id.toString());
+        users = await Promise.all(users.map((u) => User.findOne({
+            where: {
+                id: parseInt(u, 10)
+            }
+        }))); //[[노드, true],[리액트, true]]
+
+        //이름만 있는 배열로
+        var userName = users.map(u=>{
+            
+            return u.nickname;
+        })
+
+        //배열.join(', ') '이름, 이름, 이름, 이름'
+        userName = userName.join(', ');
+
+        const newRoom = await Room.create({
+            title: userName,
+            UserId: req.user.id,
+        });
+
+        //users에 있는 유저들을 room에 add 시켜야
+        await Promise.all(users.map(u=> newRoom.addParticipants(u.id)));
+
+        const io = req.app.get('io');
+        io.of('/room').emit('newRoom', newRoom); //틀렸음... 초대된 사람만 newRoom
+
+        return res.status(201).send(null);
+     */
+    /*
     chat.on('connection', (socket) => {
         console.log('chat 네임스페이스에 접속');
         const req = socket.request;
@@ -48,4 +163,5 @@ module.exports = (server, app) => {
             }
         })
     });
+    */
 }

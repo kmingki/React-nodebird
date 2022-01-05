@@ -28,7 +28,7 @@ const DesktopLayout = ({children, Side}) => {
     }, [LOG_OUT_REQUEST]);
 
     const onClickMessages = useCallback(()=>{
-        return router.push('/messages');
+        return router.push('/message/main');
     });
 
     const onClickProfile = useCallback(()=>{
