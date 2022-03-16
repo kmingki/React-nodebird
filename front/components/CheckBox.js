@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Checkbox, Avatar } from 'antd';
 

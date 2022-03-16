@@ -1,13 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 export const useJoinRoom = (socket, id) => {
-    const requestJoin = () => {
-       
-        socket.emit('joinRoom', id);
-    };
+  const requestJoin = () => {
+    socket.emit('joinRoom', id);
+  };
 
-    useEffect(requestJoin, []);
+  useEffect(requestJoin, []);
 };
+
 /*
 export const useWantingRoom = (socket, userId, dispatch) => {
     const ms = useMemo(()=>socket, [socket]);

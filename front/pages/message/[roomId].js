@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -30,9 +31,6 @@ const Message = () => {
             
             room.participants.forEach(u => {
                 if (u.id === me.id) {
-                    console.log('update room list');
-                    //draft.me.Followings.push({ id : action.data.UserId});
-                    //console.log([...rooms, room]);
                     dispatch({
                         type: UPDATE_ROOM_LIST,
                         data: room

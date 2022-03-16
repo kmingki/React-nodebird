@@ -1,5 +1,5 @@
 const SocketIO = require('socket.io');
-const { Room, User } = require('./models');
+const { Room, User, Chat } = require('./models');
 
 module.exports = (server, app) => {
     const io = SocketIO(server, { 
@@ -13,8 +13,8 @@ module.exports = (server, app) => {
     app.set('io', io);
 
     io.on('connection', (socket)=>{
+        
         socket.on('joinRoom', async (id) => {
-
             const user = await User.findOne({
                 where: { id: id }
             });
@@ -22,6 +22,7 @@ module.exports = (server, app) => {
             const rooms = await user.getParticipateRoom();
             
             rooms.forEach((r)=>{
+                console.log(`${user.nickname} joined ${r.id}`);
                 socket.join(parseInt(r.id, 10));
             });
 
@@ -38,11 +39,21 @@ module.exports = (server, app) => {
                     where: { id: userId }
                 });
     
-                //await post.addLikers(req.user.id);//객체 or id
                 const rooms = await user.getParticipateRoom({
                     include: [{
                         model: User,
                         attributes: [ 'id', 'nickname']
+                    }, {
+                        model: User,
+                        as: 'participants',
+                        attributes: ['id', 'nickname']
+                    }, {
+                        model: Chat,
+                        order: [['createdAt']],
+                        include : [{
+                            model: User,
+                            attributes: ['id', 'nickname'],
+                        }]
                     }],
                 });
 
@@ -91,14 +102,70 @@ module.exports = (server, app) => {
                 where: { id: newRoom.id },
                 include: [{
                     model: User,
-                    as: 'participants',
                     attributes: [ 'id', 'nickname']
+                }, {
+                    model: User,
+                    as: 'participants',
+                    attributes: ['id', 'nickname']
+                }, {
+                    model: Chat,
+                    order: [['createdAt']],
+                    include : [{
+                        model: User,
+                        attributes: ['id', 'nickname'],
+                    }]
                 }],
             });
 
             //console.log(newRoomWithFullData);
 
             io.emit('updateRoomList', newRoomWithFullData); //초대된 사람만?
+
+        });
+
+        socket.on('sendMessage', async ({ roomId, message, userId })=>{
+
+            const newChat = await Chat.create({
+                chat: message,
+                UserId: userId,
+                RoomId: roomId
+            });
+
+            /*
+            console.log(io.sockets.adapter.rooms);
+            */
+
+            //chat을 다 주자 ...
+            const room = await Room.findOne({ where: { id : roomId }});
+            const fullChats = await room.getChats({order: [['createdAt']]});
+            //console.log(fullChats);
+            io.to(roomId).emit('newMessage', fullChats);
+        });
+
+        socket.on('loadRoom', async ({ roomId, socketId}) => {
+
+            const roomWithFullData = await Room.findOne({
+                where: { id: roomId },
+                include: [{
+                    model: User,
+                    attributes: [ 'id', 'nickname']
+                }, {
+                    model: User,
+                    as: 'participants',
+                    attributes: ['id', 'nickname']
+                }, {
+                    model: Chat,
+                    include : [{
+                        model: User,
+                        attributes: ['id', 'nickname'],
+                    }],
+                }],
+                order: [
+                    [Chat, 'createdAt', 'ASC']
+                  ],
+            });
+
+            io.to(socketId).emit('roomData', roomWithFullData);
 
         });
     });

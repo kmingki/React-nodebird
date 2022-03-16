@@ -1,13 +1,17 @@
+/* eslint-disable */
 import React from 'react';
 import Head from 'next/head';
 import PropTypes from "prop-types";
 import 'antd/dist/antd.css';
 import '../css/main.css';
 import wrapper from '../store/configureStore.js';
-import { io } from "socket.io-client";
+import { useRouter } from 'next/router';
 
 //pages의 공통부분
-const NodeBird = ({ Component }) => {
+const NodeBird = ({ Component, pageProps }) => {
+    
+    const router = useRouter();
+
     return (
         <>
             <Head>
@@ -15,7 +19,7 @@ const NodeBird = ({ Component }) => {
                 <title>Chatter</title>
                 <link rel='icon' type='image/x-icon' href='/favicon.ico'></link>
             </Head>
-            <Component />
+            <Component {...pageProps} key={router.asPath}/>
         </>
     )
 };
