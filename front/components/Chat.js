@@ -1,21 +1,30 @@
 /* eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
 import { Input, Button } from 'antd';
-import { ArrowUpOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, LoadingOutlined, UserAddOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { socket } from '../utils/io';
 import _ from 'lodash';
+import styled from 'styled-components';
+
+const ChatWrapper = styled.div`
+max-width: 50%;
+border: solid 1px #4C4C51;
+border-radius: 5%;
+align-self: ${({sender}) => sender==='me'?'flex-end':'flex-start'};
+padding: 2%;
+margin: 1% 0;
+word-wrap: break-word;
+`;
 
 const Chat = ({ roomId }) => {
     const { me } = useSelector((state)=>state.user);
-    const [room, setRoom] = useState({}); //왜 다른 페이지인데 안바뀌냐?
+    const [room, setRoom] = useState({})
     const [isLoading, setIsLoading] = useState(true);
-    const [message, setMessage] = useState(''); //입력 메세지
+    const [message, setMessage] = useState(''); //Input 입력 메세지
     const [messages, setMessages] = useState([]); //채팅방 메세지 기록
     const chattingContent = useRef(null);
 
-    console.log('chat component rendered')
-    //dynamic page parameter 바뀔때마다 rerendering된다. 
     useEffect(()=>{
         if (roomId !== "main" && isLoading) {
             socket.emit('loadRoom', {
@@ -28,29 +37,9 @@ const Chat = ({ roomId }) => {
     useEffect(()=>{
         
         socket.on('roomData', (roomData)=>{
-            
-            /*
-            setRoom(room => ({...room,
-            Chats: _.cloneDeep(roomData.Chats),
-            User: _.cloneDeep(roomData.User),
-            UserId: roomData.UserId,
-            createdAt: roomData.createdAt,
-            id : roomData.id,
-            max: roomData.max,
-            participants: _.cloneDeep(roomData.participants),
-            title: roomData.title,
-            updatedAt: roomData.updatedAt
-            }));
-            */
            
             setRoom(roomData);
             setMessages(roomData.Chats);
-           
-            /*
-            setRoom({...room, roomData});
-            const chats = roomData.Chats;
-            setMessages({...messages, chats});
-            */
 
             setIsLoading(false);
         
@@ -64,19 +53,9 @@ const Chat = ({ roomId }) => {
 
     useEffect(()=>{
         
-        socket.on('newMessage', (fullChats) => {
-            /* fullChats
-            [{
-                id: 29,
-                chat: '2시 9분',
-                createdAt: 2022-01-27T05:09:02.000Z,
-                updatedAt: 2022-01-27T05:09:02.000Z,
-                UserId: 3,
-                RoomId: 74
-              },]
-            */
-
-            setMessages(fullChats);
+        socket.on('newMessage', (newChat) => {
+           console.log('new Message event on');
+           setMessages((prev)=> { return [...prev, newChat]});
         });
 
         return () => {
@@ -88,10 +67,6 @@ const Chat = ({ roomId }) => {
     
     useEffect(()=> {
 
-        console.log('ref object changed');
-        console.log(chattingContent.current);
-        //[id]바뀔때 컴포넌트 리렌더링은 되지만, mount도 매번 된다
-        //ref 객체는 리렌더링이 되어도 변경되지 않는다.
         chattingContent.current && updateScroll();
         
     });
@@ -103,18 +78,21 @@ const Chat = ({ roomId }) => {
     const onClickSubmit = () => {
         if (message.length > 0) {
             console.log(`send ${message} to server`);
+            
             socket.emit('sendMessage', {
                 roomId : parseInt(roomId, 10),
                 message,
                 userId: me.id
             });
+            
             setMessage('');
         }
     };
 
+    // 채팅창 밑부분부터 보여지게 scroll update 부분
     const updateScroll = () => {
         chattingContent.current.scrollTop = chattingContent.current.scrollHeight;
-    } ///처음 채팅방을 눌렀을때, 챗이 왔을때 ? 고민좀
+    } 
     return (
         <>
         { roomId !== "main" ? 
@@ -124,8 +102,8 @@ const Chat = ({ roomId }) => {
             <h2>{room.title}</h2>&nbsp;&nbsp;<h2 style={{color: "grey"}}>{room.participants.length}</h2>
             </div>
 
-            <div className="chatContainer" ref={chattingContent} style={{ height:"calc(100% - 110px)", width:"100%", overflow:'auto'}}>
-            { messages && messages.map((m, i)=><div key={i} style={{height:"30px"}}>{m.chat}</div>)}
+            <div className="chatContainer" ref={chattingContent} style={{ height:"calc(100% - 110px)", width:"100%", overflow:'auto', display:'flex', flexDirection: 'column', paddingRight: '5%', paddingLeft:'5%'}}>
+            { messages && messages.map((m, i)=><ChatWrapper key={i} sender={m.User.id === me.id? "me" : "other"}>{m.chat}</ChatWrapper>)}
             </div>
 
             <div className="input" style={{position:"absolute", height:"60px", width:"100%",left:'0', right:'0', bottom:"0", display:"flex", alignItems: "center",
@@ -144,11 +122,3 @@ const Chat = ({ roomId }) => {
 }
 
 export default Chat;
-
-/*
-<div>
-        <h1>You don’t have a message selected</h1>
-        <br />
-        <p>Choose one from your existing messages, or start a new one.</p>
-        </div>
- */

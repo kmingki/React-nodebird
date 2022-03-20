@@ -132,14 +132,16 @@ module.exports = (server, app) => {
             });
 
             /*
-            console.log(io.sockets.adapter.rooms);
-            */
-
-            //chat을 다 주자 ...
             const room = await Room.findOne({ where: { id : roomId }});
             const fullChats = await room.getChats({order: [['createdAt']]});
-            //console.log(fullChats);
-            io.to(roomId).emit('newMessage', fullChats);
+            */
+            const newChatWithFullData = await Chat.findOne({ where: { id: newChat.id},
+            include: [{
+                model: User,
+                attributes: ['id', 'nickname'],
+            }]});
+
+            io.to(roomId).emit('newMessage', newChatWithFullData);
         });
 
         socket.on('loadRoom', async ({ roomId, socketId}) => {

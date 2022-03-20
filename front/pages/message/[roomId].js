@@ -45,7 +45,7 @@ const Message = () => {
     }, []);
 
     return(
-        <DesktopLayout Side={<Room height={document.documentElement.clientHeight}/>}>
+        <DesktopLayout Side={<Room/>}>
             <Chat roomId={roomId} />
         </DesktopLayout>
     );

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect } from 'react';
 import { useDispatch , useSelector } from 'react-redux';
 import { END } from 'redux-saga';
@@ -25,10 +26,7 @@ const Main = () => {
     const isMobile = useMediaQuery({ maxWidth: 500 }); //~500
     const isTablet = useMediaQuery({ minWidth: 501, maxWidth: 1023}); //501~1023
     const isDesktop = useMediaQuery({ minWidth: 1024 });
-    //const isBigDesktop = useMediaQuery({ minWidth: 1280 });
 
-    //useEffect : 컴포넌트가 렌더링 될때마다 특정 작업을 실행할 수 있도록 하는 Hook
-    //component가 mount 됬을때, component가 unmount 됐을때, component가 update됬을때(특정 props, stat가 바뀔때)
     useEffect(()=>{
         if (retweetError){
             return alert(retweetError);
