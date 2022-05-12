@@ -4,6 +4,7 @@ import { END } from 'redux-saga';
 import axios from 'axios';
 import Router from 'next/router';
 import { useMediaQuery } from 'react-responsive';
+import { message } from 'antd';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
@@ -21,7 +22,7 @@ const Main = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts,
-    loadPostsLoading, retweetError } = useSelector((state) => state.post);
+    loadPostsLoading, loadPostsError, retweetError } = useSelector((state) => state.post);
   const isMobile = useMediaQuery({ maxWidth: 500 }); // ~500
   const isTablet = useMediaQuery({ minWidth: 501, maxWidth: 1023 }); // 501~1023
   const isDesktop = useMediaQuery({ minWidth: 1024 });
@@ -51,11 +52,18 @@ const Main = () => {
   }, [mainPosts, hasMorePosts, loadPostsLoading]);
 
   useEffect(() => {
+    if (loadPostsError) {
+      message.info(loadPostsError);
+    }
+  }, [loadPostsError]);
+
+  /*
+  useEffect(() => {
     if (!me) {
       return Router.push('/');
     }
   }, [me]);
-
+*/
   const mainContents = (
     <>
       { me && <PostForm />}

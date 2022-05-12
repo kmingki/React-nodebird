@@ -131,7 +131,7 @@ function logInAPI(data) {
 function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);// { email, password }
-    // console.log(result.data);
+    console.log(result.data);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data,
