@@ -87,12 +87,12 @@ router.get('/loadFollowings', isLoggedIn, async (req, res, next) => {
         next(err);
     }
 });
+//LOAD MY INFO REQUEST
+router.get('/', isLoggedIn, async (req, res, next) => {
 
-router.get('/', async (req, res, next) => {
     try {
-        if (req.user) {
             const fullUserWithoutPassword = await User.findOne({
-                where: { id: req.user.id },
+                where: { id: req.user },
                 attributes: {
                     exclude: ['password']
                 },
@@ -120,9 +120,6 @@ router.get('/', async (req, res, next) => {
             });
             //console.log(fullUserWithoutPassword);
             return res.status(200).send(fullUserWithoutPassword);
-        } else {
-            return res.status(200).send(null);
-        }
 
     } catch (err) {
         console.log(err);
@@ -166,7 +163,7 @@ router.post('/login', isNotLoggedIn, async(req, res, next) => {
         bcrypt.compare(password, user.password, async(err, result) => {
             if (result) {
                 const token = jwt.sign({ id:user.id, email:user.email }, "secretkey", { expiresIn : '1h'});
-                res.cookie('token', token);
+                res.cookie('token', token, { httpOnly: true });
 
                 try{
                     const fullUserWithoutPassword = await User.findOne({
@@ -188,6 +185,7 @@ router.post('/login', isNotLoggedIn, async(req, res, next) => {
                     }
                 ]
                 });
+                
                 return res.status(200).send(fullUserWithoutPassword);
                 } catch (error) {
                     console.log(error);
@@ -202,68 +200,12 @@ router.post('/login', isNotLoggedIn, async(req, res, next) => {
         return res.status(404).send('아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.');
     }
 })
-/// (req, res, next) => ... 는 미들웨어
-/*
-router.post('/login', isNotLoggedIn, (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            console.error(err);
-            return next(err);
-        }
-
-        if (info) {
-            return res.status(401).send(info.reason);
-        }
-
-        req.logIn(user, async function(err) {
-
-            if (err) { 
-                console.error(err);   
-                return next(err); 
-            }
-
-            try{
-                //await 안써서 fullUserWithoutPassword가 null이었다.
-                const fullUserWithoutPassword = await User.findOne({
-                where: { id : user.id },
-                attributes: { exclude: ['password']},
-                include: [{
-                    model: Post,
-                    attributes : [ 'id' ]
-                },
-                {
-                    model: User,
-                    as: 'Followers',
-                    attributes : ['id']
-                },
-                {
-                    model: User,
-                    as: 'Followings',
-                    attributes : ['id']
-                }
-            ]
-            });
-            return res.status(200).send(fullUserWithoutPassword);
-            } catch (error) {
-                console.log(error);
-                return next(err);
-            }
-            
-          });
-
-    })(req, res, next);//라우터 미들웨어 안에 미들웨어
-});
-*/
 
 router.post('/logout', isLoggedIn, (req, res) => {
     
     res.clearCookie('token');
     res.send('ok');
-    /*
-    req.logout();
-    req.session.destroy();
-    res.send('ok');
-    */
+
 });
 
 router.patch('/unfollow/:UserId', isLoggedIn, async (req, res, next)=>{

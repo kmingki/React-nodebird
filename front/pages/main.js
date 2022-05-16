@@ -52,6 +52,12 @@ const Main = () => {
   }, [mainPosts, hasMorePosts, loadPostsLoading]);
 
   useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, []);
+
+  useEffect(() => {
     if (loadPostsError) {
       message.info(loadPostsError);
     }
@@ -99,9 +105,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     axios.defaults.headers.Cookie = cookie;
   }
 
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST,
   });
