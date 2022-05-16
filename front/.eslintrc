@@ -32,5 +32,7 @@
       "linebreak-style": "off",
       "no-param-reassign": "off",
       "import/prefer-default-export":"off",
+      "import/no-absolute-path":"off",
+      "react/jsx-props-no-spreading":"off"
     }
   }

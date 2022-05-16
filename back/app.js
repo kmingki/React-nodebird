@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const passport = require('passport');
+//const passport = require('passport');
 const cookieParser = require('cookie-parser');
-var session = require('express-session')
+//var session = require('express-session')
 const morgan = require('morgan');
 const path = require('path');
 const postsRouter=require('./routes/posts');
@@ -11,7 +11,7 @@ const postRouter=require('./routes/post');
 const hashtagRouter=require('./routes/hashtag');
 const roomRouter=require('./routes/room');
 const db=require('./models');
-const passportConfig = require('./passport');
+//const passportConfig = require('./passport');
 const webSocket = require('./socket');
 
 const app = express();
@@ -20,7 +20,7 @@ db.sequelize.sync()
     console.log('db 연결 성공');
 })
 .catch(console.error);
-passportConfig();
+//passportConfig();
 
 app.use(morgan('dev'));
 app.use(cors({
@@ -36,16 +36,18 @@ require('dotenv').config();
 app.use(cookieParser(process.env.COOKIESECRET, {
     signed: true,
 })); 
+/*
 app.use(session({
     secret: process.env.COOKIESECRET,
     resave: false,
     saveUninitialized: false,
   }))
+*/
 
-app.use(passport.initialize());//요청(req객체)에 passport 설정
+//app.use(passport.initialize());//요청(req객체)에 passport 설정
 //req.session객체에 passport설정 저장. 
 //req.session 객체는 express-session에서 생성하는 것이므로 express-session미들웨어보다 뒤에 연결
-app.use(passport.session());
+//app.use(passport.session());
 
 
 app.get('/', (req, res)=>{

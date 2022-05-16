@@ -1,31 +1,29 @@
-/* eslint-disable */
 import React from 'react';
 import Head from 'next/head';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
-import '../css/main.css';
-import wrapper from '../store/configureStore.js';
-import { useRouter } from 'next/router';
+import '../css/global.css'; // Global CSS cannot be imported from files other than your Custom <App>
+import wrapper from '../store/configureStore'; // to initialize all pages with the store as follows.
 
-//pages의 공통부분
-const NodeBird = ({ Component, pageProps }) => {
-    
-    const router = useRouter();
+// pages의 공통부분
+// Component prop is the active page
+// pageProps is an object with the initial props that were preloaded for your page
 
-    return (
-        <>
-            <Head>
-                <meta charSet="utf-8" />
-                <title>Chatter</title>
-                <link rel='icon' type='image/x-icon' href='/favicon.ico'></link>
-            </Head>
-            <Component {...pageProps} key={router.asPath}/>
-        </>
-    )
+const MyApp = ({ Component, pageProps }) => (
+  <>
+    <Head>
+      <meta charSet="utf-8" />
+      <title>Chatter</title>
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    </Head>
+    <Component {...pageProps} />
+  </>
+);
+
+MyApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.object.isRequired,
 };
 
-NodeBird.propTypes = {
-    Component: PropTypes.elementType.isRequired,
-}
-
-export default wrapper.withRedux(NodeBird);
+export default wrapper.withRedux(MyApp);
