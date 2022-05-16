@@ -118,7 +118,6 @@ router.get('/', isLoggedIn, async (req, res, next) => {
                 }
             ]
             });
-            //console.log(fullUserWithoutPassword);
             return res.status(200).send(fullUserWithoutPassword);
 
     } catch (err) {
