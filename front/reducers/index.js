@@ -1,8 +1,19 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import user from './user';
 import post from './post';
 import chat from './chat';
+
+const persistConfig = {
+  key: 'root',
+  // localStorage에 저장합니다.
+  storage,
+  // auth, board, studio 3개의 reducer 중에 auth reducer만 localstorage에 저장합니다.
+  whitelist: ['user'],
+  // blacklist -> 그것만 제외합니다
+};
 
 const rootReducer = (state, action) => {
   switch (action.type) {
@@ -24,4 +35,4 @@ const rootReducer = (state, action) => {
   }
 };
 
-export default rootReducer;
+export default persistReducer(persistConfig, rootReducer);

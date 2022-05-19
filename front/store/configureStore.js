@@ -2,7 +2,7 @@ import { applyMiddleware, createStore, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { createWrapper } from 'next-redux-wrapper'; // use createWrapper from next-redux-wrapper to provide the store to all pages.
 import { composeWithDevTools } from 'redux-devtools-extension';
-
+import { persistStore } from 'redux-persist';
 import reducer from '../reducers';
 import rootSaga from '../sagas';
 
@@ -16,6 +16,7 @@ const configureStore = () => {
     );
   const store = createStore(reducer, enhancer);
   store.sagaTask = sagaMiddleware.run(rootSaga);
+  store.__persistor = persistStore(store);
   return store;
 };
 

@@ -11,12 +11,10 @@ const DesktopLayout = ({ children, Side }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
 
-  /*
-  const toTop = () => {
+  const onClickHome = () => {
     router.push('/main');
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   };
-  */
 
   const onLogOut = useCallback(() => {
     dispatch({
@@ -24,15 +22,21 @@ const DesktopLayout = ({ children, Side }) => {
     });
   }, [LOG_OUT_REQUEST]);
 
-  const onClickMessages = useCallback(() => router.push('/message/main'));
+  const onClickMessages = useCallback(() => {
+    router.push('/message/main');
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
 
-  const onClickProfile = useCallback(() => router.push(`/user/${me.id}`));
+  const onClickProfile = useCallback(() => {
+    router.push(`/user/${me.id}`);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
 
   return (
     <div style={{ display: 'flex', height: '100%', width: '100%', margin: '0 auto' }}>
       <div style={{ width: '20%', position: 'fixed', left: '0' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'flex-start' }}>
-          <Button type="text" shape="round" style={{ margin: '10px 0', paddingLeft: '0px', height: '50px', fontSize: '20px' }} icon={<HomeOutlined style={{ color: '#2C2C2C' }} />}>&nbsp;Home</Button>
+          <Button type="text" shape="round" style={{ margin: '10px 0', paddingLeft: '0px', height: '50px', fontSize: '20px' }} icon={<HomeOutlined style={{ color: '#2C2C2C' }} />} onClick={onClickHome}>&nbsp;Home</Button>
           <Button type="text" shape="round" style={{ margin: '10px 0', paddingLeft: '0px', height: '50px', fontSize: '20px' }} icon={<GlobalOutlined style={{ color: '#2C2C2C' }} />}>&nbsp;Explore</Button>
           <Button type="text" shape="round" style={{ margin: '10px 0', paddingLeft: '0px', height: '50px', fontSize: '20px' }} icon={<MailOutlined style={{ color: '#2C2C2C' }} />} onClick={onClickMessages}>&nbsp;Message</Button>
           <Button type="text" shape="round" style={{ margin: '10px 0', paddingLeft: '0px', height: '50px', fontSize: '20px' }} icon={<StarOutlined style={{ color: '#2C2C2C' }} />}>&nbsp;Bookmarks</Button>

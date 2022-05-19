@@ -3,8 +3,8 @@ const router = express.Router();
 const { Op } = require('sequelize');
 
 const { User, Post, Image, Comment } = require('../models');
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-router.get('/',isLoggedIn, async(req, res, next) => {
+
+router.get('/', async(req, res, next) => {
     
     try{
         const where = {};
